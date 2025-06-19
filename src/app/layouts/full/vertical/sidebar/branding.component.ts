@@ -7,14 +7,15 @@ import { CoreService } from 'src/app/services/core.service';
   standalone: true,
   imports: [RouterModule],
   template: `
-    <div class="branding">
-      <a [routerLink]="['/']">
-        <!-- <img
-          src="./assets/images/logos/logo.svg"
+    <div class="branding m-b-20">
+      <a [routerLink]="['/']" style="display: flex; align-items:center; text-decoration:none">
+        <img
+          src="./assets/images/logos/logo-chanchito.png"
           class="align-middle m-2"
           alt="logo"
-        /> -->
-        <h2>CHANCHITO</h2>
+          style="width:40px"
+        />
+          <div style="color:#0a7ea4; margin-left: 5px; font-size:25px">Chanchito</div>
       </a>
     </div>
   `,
