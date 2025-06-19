@@ -1,0 +1,159 @@
+<div class="row">
+
+  <div class="col-lg-4">
+    <mat-card class="cardWithShadow theme-card">
+
+      <mat-card-content class="b-t-1">
+        <form [formGroup]="viewClienteForm">
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">DNI</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="dni" placeholder="43559865" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="id" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Nombres completos</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="nombres" placeholder="Juan Alvarez" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="user" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Teléfono</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="telefono" placeholder="987 654321" type="email" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Dirección</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="direccion" placeholder="Av. Méxivo 654 - San Borja" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="map-pin" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Lugar de nacimiento</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="lugarNacimiento" placeholder="Trujillo" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="world" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Teléfono 2</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="telefono2" placeholder="98 456123" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 d-flex align-items-center">
+              <mat-label class="f-w-600 d-block m-b-16">Cumpleaños</mat-label>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="cumpleanos" placeholder="05/09/2000" />
+                <mat-icon matPrefix class="op-5">
+                  <i-tabler name="cake" class="icon-20 d-flex"></i-tabler>
+                </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-sm-12">
+              <button mat-flat-button color="primary" class="btn-l">Actualizar</button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-lg-4">
+
+    <div class="row justify-content-end">
+      <div class="col-sm-12">
+        <button mat-flat-button color="primary" class="btn-l mat-warn" style="width:100%">Total: <span class="f-s-18 f-w-600">S/. {{ totalCuotasMes }} </span></button>
+      </div>
+    </div>
+
+    <mat-card class="cardWithShadow theme-card m-t-30">
+
+      <mat-card-content class="b-t-1">
+
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource1" class="w-100">
+
+          <!-- Columna Día -->
+          <ng-container matColumnDef="dia">
+            <th mat-header-cell *matHeaderCellDef class="f-s-18 f-w-600"> Día </th>
+            <td mat-cell *matCellDef="let element">
+              Día {{ element.dia }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Cantidad -->
+          <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef class="f-s-18 f-w-600"> Importe (S/.) </th>
+            <td mat-cell *matCellDef="let element">
+              S/. {{ element.cantidad }}
+            </td>
+          </ng-container>
+
+          <!-- Filas -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+
+
+
+
+      <!-- <button mat-flat-button color="primary" (click)="actualizarCuotas()">Actualizar</button> -->
+
+      </mat-card-content>
+
+    </mat-card>
+
+
+  </div>
+
+</div>
+
+

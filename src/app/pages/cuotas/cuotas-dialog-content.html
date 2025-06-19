@@ -1,0 +1,91 @@
+<h2 class="f-w-500 m-b-24" mat-dialog-title><strong>{{action}}</strong></h2>
+
+@if(action !== 'Delete') {
+<mat-dialog-content style="max-width: 600px">
+  <form [formGroup]="cuotaForm">
+    <div class="row">
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            type="text"
+            matInput
+            required
+            id="name"
+            name="name"
+            formControlName="importe"
+            placeholder="Importe"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6">
+
+
+
+        <mat-form-field class="w-100" appearance="outline">
+          <input type="text" matInput [formControl]="filterControl" [matAutocomplete]="auto3" placeholder="Buscar cliente">
+
+          <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="seleccionarCliente($event)">
+            @for (cliente of clientesFiltrados; track cliente) {
+              <mat-option [value]="cliente.nombres">
+                {{ cliente.nombres }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+
+
+        <!-- <mat-form-field class="w-100" appearance="outline">
+          <input type="text" matInput [formControl]="filterControl" [matAutocomplete]="auto3" placeholder="Buscar cliente" />
+
+          <mat-autocomplete #auto3="matAutocomplete">
+            @for (cliente of clientesFiltrados; track cliente) {
+              <mat-option [value]="cliente.nombres">
+                {{ cliente.nombres }} - {{ cliente.dni }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field> -->
+
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 m-b-24">
+        <span class="bg-light f-w-500 p-x-8 p-y-4 rounded-pill f-s-12 bg-light-error" *ngIf="cuotaExiste"> {{ cuotaExiste }} </span>
+      </div>
+    </div>
+
+
+
+    <button
+      mat-flat-button
+      (click)="doAction()"
+      mat-flat-button
+      color="primary"
+      [disabled]="!cuotaForm.valid"
+    >
+      {{action}}
+    </button>
+    <button
+      mat-stroked-button
+      color="warn"
+      class="m-l-8"
+      (click)="closeDialog()"
+    >
+      Cancel
+    </button>
+  </form>
+</mat-dialog-content>
+} @else {
+<div class="p-x-24">
+  <p>Esta seguro <span class="f-w-600">{{local_data.Name}}</span> ?</p>
+</div>
+<div mat-dialog-actions class="p-x-24 p-b-24">
+  <button mat-button (click)="doAction()" mat-flat-button color="warn">
+    {{action}}
+  </button>
+  <button mat-button (click)="closeDialog()" class="m-l-8">Cancel</button>
+</div>
+}

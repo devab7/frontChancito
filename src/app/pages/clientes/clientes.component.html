@@ -1,0 +1,134 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <div class="row justify-content-between">
+      <div class="col-lg-10">
+        <mat-form-field appearance="outline" class="w-100 hide-hint">
+          <input
+            matInput
+            placeholder="Buscar cliente"
+            (keyup)="applyFilter($any($event.target).value)"
+          />
+          <mat-icon matSuffix>
+            <i-tabler name="search" class="icon-20"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-2 d-flex align-items-center justify-content-end">
+        <button mat-flat-button (click)="openDialog('Añadir Cliente', {})" color="primary">
+          Añadir cliente
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource" class="w-100">
+        <ng-container matColumnDef="#">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">#</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dni">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">DNI</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center">
+              <!-- <img
+                class="rounded-circle"
+                [src]="element.imagePath"
+                width="40"
+                /> -->
+
+                <div class=""> <!-- <div class="m-l-16"> -->
+                  <p class="mat-subtitle-1 f-s-14 m-t-0">
+                    {{ element.dni }}
+                  </p>
+                  <!-- <small class="mat-body-1 f-s-14">{{ element.dni }}</small> -->
+                </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombres">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Nombres completos
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.nombres }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="telefono">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Teléfono
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            {{ element.telefono }}
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="direccion">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Dirección
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            {{ element.direccion }}
+          </td>
+        </ng-container> -->
+
+        <!-- <ng-container matColumnDef="cumpleanos">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Cumpleaños
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            {{ element.cumpleanos | date : "fullDate" }}
+          </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="lugarNacimiento">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Lugar de nacimiento
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            {{ element.lugarNacimiento }}
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="telefono2">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Teléfono 2
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            {{ element.telefono2 }}
+          </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let element" class="action-link">
+            <a
+                routerLink = "./{{ element.id }}"
+                class="m-r-10 cursor-pointer mdc-button mdc-button--unelevated mat-mdc-unelevated-button mat-primary mat-mdc-button-base"
+              > VER
+             <!-- <i-tabler name="eye" class="icon-18"></i-tabler> -->
+            </a>
+            <a
+              (click)="openDialog('Delete', element)"
+              class="m-r-10 cursor-pointer mdc-button mdc-button--unelevated mat-mdc-unelevated-button mat-warn mat-mdc-button-base"
+            >
+              <i-tabler name="trash" class="icon-18"></i-tabler>
+            </a>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSizeOptions]="[10, 15, 20]"
+        showFirstLastButtons class="mt-5"
+      ></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

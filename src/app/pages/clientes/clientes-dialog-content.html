@@ -1,0 +1,72 @@
+<h2 class="f-w-500 m-b-24" mat-dialog-title><strong>{{action}}</strong></h2>
+
+@if(action !== 'Delete') {
+<mat-dialog-content style="max-width: 600px">
+
+  <form [formGroup]="clienteForm">
+    <div class="row">
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="dni" placeholder="DNI" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="nombres" placeholder="Nombres completos" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="telefono" placeholder="Teléfono" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="direccion" placeholder="Dirección" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="lugarNacimiento" placeholder="Lugar de nacimiento" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input type="text" matInput formControlName="telefono2" placeholder="Teléfono 2" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [matDatepicker]="picker" formControlName="cumple" placeholder="Cumpleaños" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button mat-flat-button color="primary" [disabled]="clienteForm.invalid" (click)="doAction()">
+      {{ action }}
+    </button>
+    <button mat-stroked-button color="warn" class="m-l-8" (click)="closeDialog()">
+      Cancel
+    </button>
+  </form>
+
+</mat-dialog-content>
+} @else {
+<div class="p-x-24">
+  <p>Eliminar a: <span class="f-w-600">{{ local_data.nombres}}</span> ?</p>
+</div>
+<div mat-dialog-actions class="p-x-24 p-b-24">
+  <button mat-button (click)="doAction()" mat-flat-button color="warn">
+    {{action}}
+  </button>
+  <button mat-button (click)="closeDialog()" class="m-l-8">Cancel</button>
+</div>
+}
