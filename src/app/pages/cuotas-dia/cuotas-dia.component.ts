@@ -40,23 +40,6 @@ export interface Employee {
 
 }
 
-const employees = [
-  { id: 15, cliente: 'Víctor Ríos Moreno',             fecha: new Date('2025-06-13'), importe: 111 },
-  { id: 14, cliente: 'Johana Paredes Castañeda',       fecha: new Date('2025-06-13'), importe: 99 },
-  { id: 13, cliente: 'Gabriel Huamán Flores',          fecha: new Date('2025-06-13'), importe: 115 },
-  { id: 12, cliente: 'Natalia Reátegui Navarro',       fecha: new Date('2025-06-13'), importe: 88 },
-  { id: 11, cliente: 'Fernando Olivares Díaz',         fecha: new Date('2025-06-13'), importe: 102 },
-  { id: 10, cliente: 'Lucía Herrera Ramos',            fecha: new Date('2025-06-13'), importe: 76 },
-  { id: 9,  cliente: 'Álvaro Vega Espinoza',           fecha: new Date('2025-06-13'), importe: 83 },
-  { id: 8,  cliente: 'Flor Gómez Paredes',             fecha: new Date('2025-06-13'), importe: 95 },
-  { id: 7,  cliente: 'Marco Antonio Linares',          fecha: new Date('2025-06-13'), importe: 110 },
-  { id: 6,  cliente: 'Diana Chávez Aguirre',           fecha: new Date('2025-06-13'), importe: 130 },
-  { id: 5,  cliente: 'Luis Enrique Ramos',             fecha: new Date('2025-06-13'), importe: 98 },
-  { id: 4,  cliente: 'Valeria Torres Quispe',          fecha: new Date('2025-06-13'), importe: 120 },
-  { id: 3,  cliente: 'Carlos Benavides Soto',          fecha: new Date('2025-06-13'), importe: 89 },
-  { id: 2,  cliente: 'Andrea Salas Mendez',            fecha: new Date('2025-06-13'), importe: 105 },
-  { id: 1,  cliente: 'Juan Perez Tobar Flores',        fecha: new Date('2025-06-13'), importe: 77 }
-];
 
 
 @Component({
@@ -83,7 +66,7 @@ export class CuotasDia implements OnInit, AfterViewInit {
     'fecha',
     // 'action',
   ];
-  dataSource = new MatTableDataSource(employees);
+  dataSource = new MatTableDataSource<Cuota>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator =
     Object.create(null);
 
@@ -131,7 +114,7 @@ export class CuotasDia implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result.event === 'Add') {
-        this.addRowData(result.data);
+        // this.addRowData(result.data);
       } else if (result.event === 'Update') {
         // this.updateRowData(result.data);
       } else if (result.event === 'Delete') {
@@ -142,16 +125,16 @@ export class CuotasDia implements OnInit, AfterViewInit {
 
 
   // tslint:disable-next-line - Disables all
-  addRowData(row_obj: Employee): void {
-    this.dataSource.data.unshift({
-      id: employees.length + 1,
-      importe: row_obj.importe,
-      fecha: row_obj.fecha,
-      cliente: row_obj.cliente,
-    });
-    this.dialog.open(AppAddKichenSinkComponent);
-    this.table.renderRows();
-  }
+  // addRowData(row_obj: Employee): void {
+  //   this.dataSource.data.unshift({
+  //     id: employees.length + 1,
+  //     importe: row_obj.importe,
+  //     fecha: row_obj.fecha,
+  //     cliente: row_obj.cliente,
+  //   });
+  //   this.dialog.open(AppAddKichenSinkComponent);
+  //   this.table.renderRows();
+  // }
 
   // tslint:disable-next-line - Disables all
   // updateRowData(row_obj: Employee): boolean | any {
