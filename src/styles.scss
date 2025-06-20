@@ -57,3 +57,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 17px !important;
   font-weight: 600 !important;
 }
+
+
+@media (width < 768px) {
+  button.button-space {
+    margin-top: 15px !important; // o lo que necesites
+  }
+}
