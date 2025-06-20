@@ -29,8 +29,8 @@ export class ViewComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   // Variables para el mes actual
-  nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
-  mesCapitalizado = this.nombreMes.charAt(0).toUpperCase() + this.nombreMes.slice(1);
+  // nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
+  // mesCapitalizado = this.nombreMes.charAt(0).toUpperCase() + this.nombreMes.slice(1);
 
 
   clienteId!: number;
@@ -83,6 +83,8 @@ export class ViewComponent implements OnInit {
             dia: new Date(cuota.creadoEn).getDate(),
             cantidad: cuota.importe
           }));
+
+                console.table(this.dataSource1.map(item => item.dia)); // 🧪 Diagnóstico
 
         })
 
