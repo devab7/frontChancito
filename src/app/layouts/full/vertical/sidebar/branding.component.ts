@@ -11,11 +11,10 @@ import { CoreService } from 'src/app/services/core.service';
       <a [routerLink]="['/']" style="display: flex; align-items:center; text-decoration:none">
         <img
           src="./assets/images/logos/logo-chanchito.png"
-          class="align-middle m-2"
+          class="align-middle m-2 logo"
           alt="logo"
-          style="width:40px"
         />
-          <div style="color:#0a7ea4; margin-left: 5px; font-size:25px">Chanchito</div>
+          <div class="logo-text">CHANCHITO</div>
       </a>
     </div>
   `,
