@@ -61,6 +61,9 @@ export class ViewComponent implements OnInit {
         this.cliente = cliente;
         this.totalCuotasMes = cliente.totalCuotasMes;
 
+        console.log(cliente);
+
+
         this.viewClienteForm.patchValue({
           dni: cliente.dni,
           nombres: cliente.nombres,
