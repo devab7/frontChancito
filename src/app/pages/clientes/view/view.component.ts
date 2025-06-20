@@ -90,7 +90,7 @@ export class ViewComponent implements OnInit {
         }));
 
         // console.log(this.dataSource1);
-      },100)
+      },1500)
 
 
 
