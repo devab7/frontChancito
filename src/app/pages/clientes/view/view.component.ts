@@ -77,20 +77,24 @@ export class ViewComponent implements OnInit {
           telefono2: cliente.telefono2,
           cumpleanos: cliente.cumple
         });
-      })
 
-
-      setTimeout(() => {
-
-        // this.dataSource1 = this.cliente.cuotas;
-
-          this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
+        this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
           dia: new Date(cuota.creadoEn).getDate(),
           cantidad: cuota.importe
         }));
 
-        // console.log(this.dataSource1);
-      },1500)
+      })
+
+
+      // setTimeout(() => {
+
+
+      //     this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
+      //     dia: new Date(cuota.creadoEn).getDate(),
+      //     cantidad: cuota.importe
+      //   }));
+
+      // },1500)
 
 
 
