@@ -78,6 +78,8 @@ export class ViewComponent implements OnInit {
           cumpleanos: cliente.cumple
         });
 
+         this.dataSource1 = []; // 🔥 Limpieza preventiva
+
         this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
           dia: new Date(cuota.creadoEn).getDate(),
           cantidad: cuota.importe
