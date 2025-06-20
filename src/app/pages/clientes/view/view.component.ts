@@ -59,33 +59,36 @@ export class ViewComponent implements OnInit {
           telefono2: [''],
           cumpleanos: ['']
         });
+
+        this.clienteService.findOne(this.clienteId).subscribe(cliente => {
+
+          this.cliente = cliente;
+          this.totalCuotasMes = cliente.totalCuotasMes
+          console.log(this.cliente);
+
+          // Inicializa el formulario con los datos del cliente
+          this.viewClienteForm.patchValue({
+            dni: cliente.dni,
+            nombres: cliente.nombres,
+            telefono: cliente.telefono,
+            direccion: cliente.direccion,
+            lugarNacimiento: cliente.lugarNacimiento,
+            telefono2: cliente.telefono2,
+            cumpleanos: cliente.cumple
+          });
+
+          this.dataSource1 = []; // 🔥 Limpieza preventiva
+
+          this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
+            dia: new Date(cuota.creadoEn).getDate(),
+            cantidad: cuota.importe
+          }));
+
+        })
+
       });
 
-      this.clienteService.findOne(this.clienteId).subscribe(cliente => {
 
-        this.cliente = cliente;
-        this.totalCuotasMes = cliente.totalCuotasMes
-        console.log(this.cliente);
-
-        // Inicializa el formulario con los datos del cliente
-        this.viewClienteForm.patchValue({
-          dni: cliente.dni,
-          nombres: cliente.nombres,
-          telefono: cliente.telefono,
-          direccion: cliente.direccion,
-          lugarNacimiento: cliente.lugarNacimiento,
-          telefono2: cliente.telefono2,
-          cumpleanos: cliente.cumple
-        });
-
-         this.dataSource1 = []; // 🔥 Limpieza preventiva
-
-        this.dataSource1 = this.cliente.cuotas.map((cuota:any) => ({
-          dia: new Date(cuota.creadoEn).getDate(),
-          cantidad: cuota.importe
-        }));
-
-      })
 
 
       // setTimeout(() => {
