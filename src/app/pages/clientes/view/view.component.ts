@@ -7,15 +7,16 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { AppBasicTableComponent } from '../../tables/basic-table/basic-table.component';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, RequiredValidator, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClientesService } from 'src/app/services/clientes.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-form-vertical',
   standalone: true,
-  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule],
+  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './view.component.html',
 })
@@ -48,13 +49,13 @@ export class ViewComponent implements OnInit {
       this.clienteId = Number(params['id']);
 
       this.viewClienteForm = this.fb.group({
-        dni: [''],
-        nombres: [''],
+        dni: ['', [Validators.required]],
+        nombres: ['', [Validators.required]],
         telefono: [''],
         direccion: [''],
         lugarNacimiento: [''],
         telefono2: [''],
-        cumpleanos: ['']
+        cumple: [null]
       });
 
       this.clienteService.findOne(this.clienteId).subscribe(cliente => {
@@ -71,7 +72,7 @@ export class ViewComponent implements OnInit {
           direccion: cliente.direccion,
           lugarNacimiento: cliente.lugarNacimiento,
           telefono2: cliente.telefono2,
-          cumpleanos: cliente.cumple
+          cumple: cliente.cumple ? new Date(cliente.cumple) : null
         });
 
         // 🔥 Alternativa rápida usando `as any`
@@ -94,7 +95,7 @@ export class ViewComponent implements OnInit {
             cantidad: cuota.importe
           }));
 
-        console.table(this.dataSource1.map(item => item.dia)); // 🔎 Diagnóstico visual
+        // console.table(this.dataSource1.map(item => item.dia)); // 🔎 Diagnóstico visual
       });
     });
   }
@@ -108,6 +109,25 @@ export class ViewComponent implements OnInit {
   constructor() { }
 
 
+  actualizarCliente(): void {
+    if (this.viewClienteForm.invalid) return;
+
+    const dto = this.viewClienteForm.value;
+    const id = this.clienteId;
+
+    this.clienteService.update(id, dto).subscribe({
+      next: (clienteActualizado) => {
+        console.log('✅ Cliente actualizado:', clienteActualizado);
+        console.log(clienteActualizado);
+
+        // Podés actualizar el estado local si lo necesitás
+        this.cliente = clienteActualizado;
+      },
+      error: (err) => {
+        console.error('❌ Error al actualizar el cliente:', err);
+      }
+    });
+  }
 
 
 

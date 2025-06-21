@@ -4,7 +4,7 @@
     <mat-card class="cardWithShadow theme-card">
 
       <mat-card-content class="b-t-1">
-        <form [formGroup]="viewClienteForm">
+        <form [formGroup]="viewClienteForm" (ngSubmit)="actualizarCliente()">
           <div class="row">
             <div class="col-sm-12 d-flex align-items-center">
               <mat-label class="f-w-600 d-block m-b-16">DNI</mat-label>
@@ -24,7 +24,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="nombres" placeholder="Juan Alvarez" />
+                <input matInput formControlName="nombres" placeholder="Juan Alvarez"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="user" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -88,17 +88,26 @@
               <mat-label class="f-w-600 d-block m-b-16">Cumpleaños</mat-label>
             </div>
             <div class="col-sm-12">
-              <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="cumpleanos" placeholder="05/09/2000" />
+              <!-- <mat-form-field appearance="outline" class="w-100">
+                <input matInput formControlName="cumple" placeholder="05/09/2000" />
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="cake" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
+              </mat-form-field> -->
+              <mat-form-field appearance="outline" class="w-100">
+                <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="cumple"
+                placeholder="Cumpleaños" />
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
           </div>
           <div class="row justify-content-end">
             <div class="col-sm-12">
-              <button mat-flat-button color="primary" class="btn-l">Actualizar</button>
+              <button mat-flat-button color="primary" class="btn-l"  [disabled]="viewClienteForm.invalid">Actualizar</button>
             </div>
           </div>
         </form>

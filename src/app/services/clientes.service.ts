@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 //interfaces
 import { Cliente } from '../interfaces/cliente.interface';
 import { CreateClienteDto } from '../interfaces/create-cliente.dto';
+import { UpdateClienteDto } from '../interfaces/update-cliente.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,12 @@ export class ClientesService {
   // update(id: number, cliente: UpdateClienteDto): Observable<Cliente> {
   //   return this.http.patch<Cliente>(`${this.apiUrl}/${id}`, cliente);
   // }
+
+  // Actualizar cliente
+  update(id: number, cliente: UpdateClienteDto): Observable<Cliente> {
+    return this.http.patch<Cliente>(`${this.apiUrl}/${id}`, cliente);
+  }
+
 
   // Eliminar un cliente
   delete(id: number): Observable<Cliente> {
