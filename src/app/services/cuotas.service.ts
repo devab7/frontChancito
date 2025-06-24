@@ -29,7 +29,7 @@ export class CuotasService {
 
   // Obtener todas las cuotas del día
   findAllCuotasDia(): Observable<Cuota[]> {
-    return this.http.get<Cuota[]>(`${this.apiUrl}/resumen/dia`);
+    return this.http.get<Cuota[]>(`${this.apiUrl}/reporte/dia`);
   }
 
   // Obtener un cuota por ID
