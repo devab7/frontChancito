@@ -11,11 +11,12 @@ import { navItems } from '../sidebar/sidebar-data';
 import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AppSettings } from 'src/app/config';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface notifications {
   id: number;
@@ -99,7 +100,9 @@ export class HeaderComponent {
     private settings: CoreService,
     private vsidenav: CoreService,
     public dialog: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: AuthService,
+    private router: Router
   ) {
     translate.setDefaultLang('en');
   }
@@ -122,6 +125,13 @@ export class HeaderComponent {
     this.translate.use(lang.code);
     this.selectedLanguage = lang;
   }
+
+  logout() {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/authentication/login']);
+    });
+  }
+
 
   notifications: notifications[] = [
     {
@@ -188,11 +198,11 @@ export class HeaderComponent {
     //   title: ' Account Settings',
     //   link: '/',
     // },
-    {
-      id: 5,
-      title: 'Cerrar Sesión',
-      link: '/authentication/login',
-    },
+    // {
+    //   id: 5,
+    //   title: 'Cerrar Sesión',
+    //   link: '/authentication/login',
+    // },
   ];
 
   apps: apps[] = [

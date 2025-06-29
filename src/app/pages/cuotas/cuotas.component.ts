@@ -35,6 +35,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { Cliente } from 'src/app/interfaces/cliente.interface';
 import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
 
 
 export interface Employee {
@@ -58,7 +59,8 @@ export interface Employee {
     MatNativeDateModule,
     NgScrollbarModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    TipoPagoColorDirective
   ],
   providers: [DatePipe],
 })
@@ -74,7 +76,8 @@ export class Cuotas implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     '#',
     'cliente',
-    'importe',
+    'cuota',
+    'tipoDePago',
     'fecha',
     // 'action',
   ];
@@ -217,8 +220,9 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
 
 
     this.cuotaForm = this.fb.group({
-      importe: ['', Validators.required],
-      clienteId: ['', Validators.required] // 🔥 Guarda el cliente seleccionado correctamente
+      cuota: ['', Validators.required],
+      clienteId: ['', Validators.required],
+      tipoPago: [''],
     });
 
 
@@ -264,7 +268,7 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
     this.clientesService.findAll().subscribe((clientes) => {
 
       this.clientes = clientes
-      console.log(this.clientes);
+      // console.log(this.clientes);
 
     })
 
@@ -292,9 +296,11 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
 
         console.log(this.cuotaForm.value);
 
+
         this.cuotasService.create(this.cuotaForm.value).subscribe({
-          next: (cuota) => {
-            console.log('Cuota creada:', cuota);
+          next: (cuota:Cuota) => {
+
+            console.log(cuota);
             this.dialogRef.close({ event: 'Add', data: cuota });
           },
           error: (error) => {

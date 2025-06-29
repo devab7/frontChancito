@@ -9,7 +9,8 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from 'src/app/services/auth.service'; // agregado
 
 @Component({
   selector: 'app-side-login',
@@ -26,19 +27,41 @@ import {MatButtonModule} from '@angular/material/button';
 export class AppSideLoginComponent {
   options = this.settings.getOptions();
 
-  constructor(private settings: CoreService, private router: Router) {}
+  error = '';
+  loading = false;
 
-  form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password: new FormControl('', [Validators.required]),
+  constructor(
+    private settings: CoreService,
+    private router: Router,
+    private authService: AuthService // inyectado
+  ) {}
+
+  loginForm = new FormGroup({
+    username: new FormControl('trabajador', [Validators.required, Validators.minLength(3)]), // renombrado
+    password: new FormControl('789', [Validators.required]),
   });
 
   get f() {
-    return this.form.controls;
+    return this.loginForm.controls;
   }
 
-  submit() {
-    // console.log(this.form.value);
-    this.router.navigate(['/pages/clientes']);
+  login() {
+    if (this.loginForm.invalid) return;
+
+    const { username, password } = this.loginForm.value;
+    this.loading = true;
+    this.error = '';
+
+    this.authService.login(username!, password!).subscribe({
+      next: () => this.router.navigate(['/pages/clientes']),
+      error: (err) => {
+
+        console.log('Error de autenticación:', err.error.message || 'Credenciales inválidas');
+
+        this.error = err.error?.message || 'Credenciales inválidas';
+        this.loading = false;
+      },
+    });
   }
+
 }

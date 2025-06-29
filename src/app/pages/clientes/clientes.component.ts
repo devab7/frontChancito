@@ -33,6 +33,7 @@ import { RouterModule } from '@angular/router';
 import { Cliente } from 'src/app/interfaces/cliente.interface';
 // services
 import { ClientesService } from 'src/app/services/clientes.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 export interface Employee {
   id: number;
@@ -79,24 +80,61 @@ export class Clientes implements AfterViewInit, OnInit {
     Object.create(null);
 
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, private clientesService: ClientesService) {}
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, private clientesService: ClientesService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.obtenerClientes();
 
   }
 
+  get rolUsuario(): string | null {
+    return this.authService.getUserRol();
+  }
+
+
+// obtenerClientes(): void {
+//   this.clientesService.findAll().subscribe((data) => {
+
+//     console.log(data);
+
+//     this.clientes = data;
+//     this.dataSource = new MatTableDataSource(data);
+
+//     setTimeout(() => {
+//       this.dataSource.paginator = this.paginator;
+//       this.table.renderRows(); // ⬅️ fuerza el render
+//     });
+
+//     this.dataSource.filterPredicate = (cliente, filtro) => {
+//       const texto = filtro.trim().toLowerCase();
+//       return (
+//         cliente.nombres.toLowerCase().includes(texto) ||
+//         cliente.dni.toLowerCase().includes(texto)
+//       );
+//     };
+//   });
+// }
+
 obtenerClientes(): void {
   this.clientesService.findAll().subscribe((data) => {
 
     console.log(data);
 
-    this.clientes = data;
-    this.dataSource = new MatTableDataSource(data);
+    // 🧠 Aseguramos orden en el frontend por si el backend falla en precisión
+    const ordenados = data.sort((a, b) => {
+      const fechaA = new Date(a.creadoEn).getTime();
+      const fechaB = new Date(b.creadoEn).getTime();
+
+      if (fechaB !== fechaA) return fechaB - fechaA;
+      return b.id - a.id; // desempate por ID
+    });
+
+    this.clientes = ordenados;
+    this.dataSource = new MatTableDataSource(ordenados);
 
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
-      this.table.renderRows(); // ⬅️ fuerza el render
+      this.table.renderRows();
     });
 
     this.dataSource.filterPredicate = (cliente, filtro) => {
@@ -108,6 +146,7 @@ obtenerClientes(): void {
     };
   });
 }
+
 
 
   ngAfterViewInit(): void {
@@ -230,9 +269,25 @@ doAction(): void {
   } else {
     if (this.clienteForm.invalid) return;
 
-    this.clientesService.create(this.clienteForm.value).subscribe(cliente => {
-      this.dialogRef.close({ event: 'Add', data: cliente });
-    });
+    // this.clientesService.create(this.clienteForm.value).subscribe(cliente => {
+    //   this.dialogRef.close({ event: 'Add', data: cliente });
+    // });
+
+      const raw = this.clienteForm.getRawValue();
+
+      const dto = {
+        ...raw,
+        cumple: raw.cumple
+          ? new Date(raw.cumple).toISOString().slice(0, 10)  // 🔥 "yyyy-MM-dd"
+          : null
+      };
+
+      this.clientesService.create(dto).subscribe(cliente => {
+        this.dialogRef.close({ event: 'Add', data: cliente });
+      });
+
+
+
   }
 }
 

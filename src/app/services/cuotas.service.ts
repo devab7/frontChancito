@@ -47,4 +47,17 @@ export class CuotasService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  // Obtener cuota base del mes del cliente
+  // getCuotaBaseDelMes(clienteId: number) {
+  //   return this.http.get<any>(`${this.apiUrl}/base-del-mes/${clienteId}`);
+  // }
+
+  getCuotaBaseDelMes(clienteId: number, mes?: string) {
+    const options = mes ? { params: { mes } } : {};
+    return this.http.get<any>(`${this.apiUrl}/base-del-mes/${clienteId}`, options);
+  }
+
+
+
+
 }

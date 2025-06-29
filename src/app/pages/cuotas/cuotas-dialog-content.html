@@ -1,10 +1,10 @@
 <h2 class="f-w-500 m-b-24" mat-dialog-title><strong>{{action}}</strong></h2>
 
 @if(action !== 'Delete') {
-<mat-dialog-content style="max-width: 600px">
+<mat-dialog-content style="max-width: 650px">
   <form [formGroup]="cuotaForm">
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-3">
         <mat-form-field appearance="outline" class="w-100">
           <input
             type="text"
@@ -12,15 +12,12 @@
             required
             id="name"
             name="name"
-            formControlName="importe"
-            placeholder="Importe"
+            formControlName="cuota"
+            placeholder="Cuota"
           />
         </mat-form-field>
       </div>
-      <div class="col-lg-6">
-
-
-
+      <div class="col-lg-5">
         <mat-form-field class="w-100" appearance="outline">
           <input type="text" matInput [formControl]="filterControl" [matAutocomplete]="auto3" placeholder="Buscar cliente">
 
@@ -32,23 +29,19 @@
             }
           </mat-autocomplete>
         </mat-form-field>
-
-
-
-        <!-- <mat-form-field class="w-100" appearance="outline">
-          <input type="text" matInput [formControl]="filterControl" [matAutocomplete]="auto3" placeholder="Buscar cliente" />
-
-          <mat-autocomplete #auto3="matAutocomplete">
-            @for (cliente of clientesFiltrados; track cliente) {
-              <mat-option [value]="cliente.nombres">
-                {{ cliente.nombres }} - {{ cliente.dni }}
-              </mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field> -->
-
-
       </div>
+
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select name="tipoDePago" formControlName="tipoPago">
+            <mat-option value="" disabled>Tipo de Pago</mat-option>
+            <mat-option value="efectivo">EFECTIVO</mat-option>
+            <mat-option value="interbank">INTERBANK</mat-option>
+            <mat-option value="bcp">BCP</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
 
     <div class="row">
@@ -64,7 +57,6 @@
       (click)="doAction()"
       mat-flat-button
       color="primary"
-      [disabled]="!cuotaForm.valid"
     >
       {{action}}
     </button>

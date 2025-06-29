@@ -17,7 +17,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
   selector: 'app-customizer',
   standalone: true,
   imports: [
-    BrandingComponent,
+    // BrandingComponent,
     TablerIconsModule,
     MaterialModule,
     FormsModule,

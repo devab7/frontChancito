@@ -255,7 +255,7 @@
       </div>
     </div>
     <div class="p-x-32 p-b-16">
-      @for(profile of profiledd; track profile.title) {
+      <!-- @for(profile of profiledd; track profile.title) {
       <a
         class="p-8 text-decoration-none d-block text-hover-primary"
         [routerLink]="[profile.link]"
@@ -272,7 +272,16 @@
           }
         </div>
       </a>
-      }
+      } -->
+
+    <a class="p-8 text-decoration-none d-block text-hover-primary" role="button" (click)="logout()" style="cursor: pointer;">
+      <div class="d-flex align-items-center">
+        <h5 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text">
+          Cerrar sesión
+        </h5>
+      </div>
+    </a>
+
     </div>
   </mat-menu>
 </mat-toolbar>

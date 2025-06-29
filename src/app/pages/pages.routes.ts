@@ -22,7 +22,7 @@ export const PagesRoutes: Routes = [
     component: Clientes,
     data: {
       title: 'Clientes',
-      breadcrumb: true,
+      // breadcrumb: true,
       urls: [
         { title: 'Escritorio', url: '/dashboards/dashboard1' },
         { title: 'Clientes' },
@@ -34,7 +34,7 @@ export const PagesRoutes: Routes = [
     component: ViewComponent,
     data: {
       title: 'Detalle Cliente',
-      breadcrumb: true,
+      // breadcrumb: true,
       urls: [
         { title: 'Escritorio', url: '/dashboards/dashboard1' },
         { title: 'Detalle Cliente' },
@@ -46,7 +46,7 @@ export const PagesRoutes: Routes = [
   component: Cuotas,
   data: {
     title: 'Cuotas',
-    breadcrumb: true,
+    // breadcrumb: true,
     urls: [
       { title: 'Escritorio', url: '/dashboards/dashboard1' },
       { title: 'Cuotas' },
@@ -58,7 +58,7 @@ export const PagesRoutes: Routes = [
   component: CuotasDia,
   data: {
     title: 'Cuotas del Día',
-    breadcrumb: true,
+    // breadcrumb: true,
     urls: [
       { title: 'Escritorio', url: '/dashboards/dashboard1' },
       { title: 'Cuotas del Día' },

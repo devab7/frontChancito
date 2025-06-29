@@ -31,6 +31,7 @@ import { MaterialModule } from 'src/app/material.module';
 import { RouterModule } from '@angular/router';
 import { CuotasService } from 'src/app/services/cuotas.service';
 import { Cuota } from 'src/app/interfaces/cuota.interface';
+import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
 
 export interface Employee {
   id: number;
@@ -51,7 +52,8 @@ export interface Employee {
     MatNativeDateModule,
     NgScrollbarModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    TipoPagoColorDirective
   ],
   providers: [DatePipe],
 })
@@ -63,6 +65,7 @@ export class CuotasDia implements OnInit, AfterViewInit {
     '#',
     'cliente',
     'importe',
+    'tipoPago',
     'fecha',
     // 'action',
   ];
@@ -71,7 +74,8 @@ export class CuotasDia implements OnInit, AfterViewInit {
     Object.create(null);
 
   cuotasDia: Cuota[] = [];
-  totalCuotasDia: number; // Variable para almacenar el total de cuotas del mes
+  totalCuotasDia: number;
+  totalPorTipoPago: Record<string, string> = {};
 
   constructor(public dialog: MatDialog, public datePipe: DatePipe, private cuotasService: CuotasService) {}
 
@@ -80,19 +84,23 @@ export class CuotasDia implements OnInit, AfterViewInit {
 
       this.cuotasService.findAllCuotasDia().subscribe((data:any) => {
 
+        console.log(data);
+
+
         this.cuotasDia = data.cuotas;
         this.totalCuotasDia = data.totalCuotasDelDia;
+        this.totalPorTipoPago = data.totalPorTipoPago;
         this.dataSource = new MatTableDataSource(data.cuotas);
         this.dataSource.paginator = this.paginator;
 
-                this.dataSource.filterPredicate = (data: any, filter: string) => {
-                  const texto = filter.trim().toLowerCase();
-                  return (
-                    data.cliente.nombres.toLowerCase().includes(texto)
-                  );
-                };
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+          const texto = filter.trim().toLowerCase();
+          return (
+            data.cliente.nombres.toLowerCase().includes(texto)
+          );
+        };
 
-        console.log(data);
+        // console.log(data);
 
       })
 

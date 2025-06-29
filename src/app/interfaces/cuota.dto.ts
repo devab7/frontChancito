@@ -1,4 +1,5 @@
 export interface CreateCuotaDto {
-  importe: number;
+  cuota: number;
   clienteId: number;
+  tipoPago: string;
 }

@@ -115,42 +115,36 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="col-lg-4">
+  <div class="col-lg-3">
 
-    <div class="row justify-content-end">
-      <div class="col-sm-12">
-        <button mat-flat-button color="primary" class="btn-l mat-warn" style="width:100%">Total: <span class="f-s-18 f-w-600">S/. {{ totalCuotasMes }} </span></button>
-      </div>
-    </div>
+    <mat-card class="cardWithShadow theme-card">
 
-    <mat-card class="cardWithShadow theme-card m-t-30">
+      <mat-card-content class="b-t-1" style="padding: 15px">
 
-      <mat-card-content class="b-t-1">
+        <div class="table-responsive">
+          <table mat-table [dataSource]="dataSource1" class="w-100 custom-table">
 
-      <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource1" class="w-100">
+            <!-- Columna Día -->
+            <ng-container matColumnDef="dia">
+              <th mat-header-cell *matHeaderCellDef class="header-table-cliente"> Día </th>
+              <td mat-cell *matCellDef="let element">
+                Día {{ element.dia }}
+              </td>
+            </ng-container>
 
-          <!-- Columna Día -->
-          <ng-container matColumnDef="dia">
-            <th mat-header-cell *matHeaderCellDef class="header-table-cliente"> Día </th>
-            <td mat-cell *matCellDef="let element">
-              Día {{ element.dia }}
-            </td>
-          </ng-container>
+            <!-- Columna Cantidad -->
+            <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef class="header-table-cliente"> Cuota (S/) </th>
+              <td mat-cell *matCellDef="let element">
+                S/. {{ element.cantidad | number:'1.2-2' }}
+              </td>
+            </ng-container>
 
-          <!-- Columna Cantidad -->
-          <ng-container matColumnDef="cantidad">
-            <th mat-header-cell *matHeaderCellDef class="header-table-cliente"> Importe (S/.) </th>
-            <td mat-cell *matCellDef="let element">
-              S/. {{ element.cantidad }}
-            </td>
-          </ng-container>
-
-          <!-- Filas -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </div>
+            <!-- Filas -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" class="custom-tr"></tr>
+          </table>
+        </div>
 
 
 
@@ -163,6 +157,50 @@
 
 
   </div>
+
+  <div class="col-lg-3">
+
+    <div class="row justify-content-end">
+
+      <div class="col-lg-12 d-flex align-items-center justify-content-end">
+        <mat-card class="shadow-none m-b-0 p-12 bg-light-primary text-center rounded w-100">
+          <h6 class="text-primary f-w-700 m-0 f-s-16"><span class="m-x-4">{{ mesConsulta | uppercase }} / </span> <small> Cuota base: S/ {{ cuotaBaseCliente }}</small> </h6>
+        </mat-card>
+      </div>
+
+      <div class="col-lg-12 d-flex align-items-center justify-content-end m-t-14" style="margin-top: 16px;">
+        <form [formGroup]="filtroMesForm" class="w-100">
+          <mat-form-field appearance="outline" class="w-100 custom-select">
+            <mat-select value="0" formControlName="mes" placeholder="Selecciona un mes">
+              <mat-option [value]="'01'">Enero</mat-option>
+              <mat-option [value]="'02'">Febrero</mat-option>
+              <mat-option [value]="'03'">Marzo</mat-option>
+              <mat-option [value]="'04'">Abril</mat-option>
+              <mat-option [value]="'05'">Mayo</mat-option>
+              <mat-option [value]="'06'">Junio</mat-option>
+              <mat-option [value]="'07'">Julio</mat-option>
+              <mat-option [value]="'08'">Agosto</mat-option>
+              <mat-option [value]="'09'">Septiembre</mat-option>
+              <mat-option [value]="'10'">Octubre</mat-option>
+              <mat-option [value]="'11'">Noviembre</mat-option>
+              <mat-option [value]="'12'">Diciembre</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 d-flex align-items-center justify-content-end">
+        <mat-card class="shadow-none m-b-0 p-12 text-center rounded w-100 custom-btn-add">
+          <h6 class="text-light f-w-700 m-0 f-s-18"><span class="m-x-6">Total: </span>  S/.  {{ totalCuotasMes | number:'1.2-2' }}</h6>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
 
 </div>
 

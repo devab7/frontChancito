@@ -11,13 +11,19 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, RequiredValid
 import { ActivatedRoute } from '@angular/router';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CommonModule } from '@angular/common';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+
+// import * as moment from 'moment';
+import * as moment from 'moment-timezone';
+import { CuotasService } from 'src/app/services/cuotas.service';
+
 
 
 @Component({
   selector: 'app-form-vertical',
   standalone: true,
   imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule],
-  providers: [provideNativeDateAdapter()],
+  providers: [provideMomentDateAdapter()],
   templateUrl: './view.component.html',
 })
 
@@ -27,6 +33,7 @@ export class ViewComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
   private clienteService = inject(ClientesService);
+  private cuotasService = inject(CuotasService);
   private fb = inject(FormBuilder);
 
   // Variables para el mes actual
@@ -37,14 +44,30 @@ export class ViewComponent implements OnInit {
   clienteId!: number;
   cliente!: any; // Usamos `signals` para mejor rendimiento
   viewClienteForm!: FormGroup;
-
+  cuotaBaseCliente!: string;
 
   cuotasMesForm!: FormGroup;
+  filtroMesForm!: FormGroup;
   displayedColumns: string[] = ['dia', 'cantidad'];
   dataSource1: any[] = [];
-  totalCuotasMes: number; // Variable para almacenar el total de cuotas del mes
+  totalCuotasMes: number;
+
+  mesConsulta: string;
 
   ngOnInit() {
+
+    // Form filtro por mes
+    this.filtroMesForm = this.fb.group({
+      mes: [null, Validators.required]
+    });
+
+    this.filtroMesForm.get('mes')!.valueChanges.subscribe((nuevoMes: string) => {
+      this.cargarClienteConMes(nuevoMes); // se llama cuando elegís un mes
+    });
+
+
+
+    // Form update customer
     this.route.params.subscribe(params => {
       this.clienteId = Number(params['id']);
 
@@ -55,53 +78,75 @@ export class ViewComponent implements OnInit {
         direccion: [''],
         lugarNacimiento: [''],
         telefono2: [''],
-        cumple: [null]
+        cumple: ['']
       });
+
+      this.cuotasService.getCuotaBaseDelMes(this.clienteId).subscribe(cuotaBase => {
+        console.log('🧾 Cuota base del mes:', cuotaBase);
+
+        this.cuotaBaseCliente = cuotaBase?.cuotaBase ?? '0';
+
+      });
+
 
       this.clienteService.findOne(this.clienteId).subscribe(cliente => {
-        this.cliente = cliente;
-        this.totalCuotasMes = cliente.totalCuotasMes;
 
-        console.log(cliente);
+        this.cargarClienteConMes(); // se cargará con el mes actual por defecto
 
-
-        this.viewClienteForm.patchValue({
-          dni: cliente.dni,
-          nombres: cliente.nombres,
-          telefono: cliente.telefono,
-          direccion: cliente.direccion,
-          lugarNacimiento: cliente.lugarNacimiento,
-          telefono2: cliente.telefono2,
-          cumple: cliente.cumple ? new Date(cliente.cumple) : null
-        });
-
-        // 🔥 Alternativa rápida usando `as any`
-        const cuotas = (cliente as any).cuotas;
-
-        const hoy = new Date();
-        const mesActual = hoy.getMonth();
-        const anioActual = hoy.getFullYear();
-
-        this.dataSource1 = cuotas
-          .filter((cuota: any) => {
-            const fecha = new Date(cuota.creadoEn);
-            return (
-              fecha.getMonth() === mesActual &&
-              fecha.getFullYear() === anioActual
-            );
-          })
-          .map((cuota: any) => ({
-            dia: new Date(cuota.creadoEn).getDate(),
-            cantidad: cuota.importe
-          }));
-
-        // console.table(this.dataSource1.map(item => item.dia)); // 🔎 Diagnóstico visual
       });
+
     });
+
   }
 
+  cargarClienteConMes(mes?: string) {
+    const options = mes ? { params: { mes } } : {};
 
-  actualizarCuotas(){}
+    this.clienteService.findOne(this.clienteId, options).subscribe(cliente => {
+      this.cliente = cliente;
+
+      const mesNum = cliente.mes ?? moment().format('MM'); // fallback por si no viene
+      this.mesConsulta = moment(mesNum, 'MM').locale('es').format('MMMM'); // ej: "junio"
+
+      this.cuotasService.getCuotaBaseDelMes(this.clienteId, mes).subscribe(cuotaBase => {
+        this.cuotaBaseCliente = cuotaBase?.cuotaBase ?? '0';
+      });
+
+
+      this.totalCuotasMes = cliente.totalCuotasMes;
+
+      console.log(cliente);
+
+
+      this.viewClienteForm.patchValue({
+        dni: cliente.dni,
+        nombres: cliente.nombres,
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+        lugarNacimiento: cliente.lugarNacimiento,
+        telefono2: cliente.telefono2,
+        cumple: cliente.cumple
+          ? moment(cliente.cumple, 'DD/MM/YYYY')
+          : null
+      });
+
+      const cuotasMap: { [dia: number]: number } = {};
+      for (const cuota of cliente.cuotasCompletas) {
+        const fecha = new Date(cuota.creadoEn);
+        const dia = fecha.getDate();
+        cuotasMap[dia] = (cuotasMap[dia] || 0) + cuota.cuota;
+      }
+
+      this.dataSource1 = Object.entries(cuotasMap).map(([dia, cantidad]) => ({
+        dia: Number(dia),
+        cantidad: Number(cantidad)
+      }));
+    });
+}
+
+
+
+  // actualizarCuotas(){}
 
 
 
@@ -110,9 +155,19 @@ export class ViewComponent implements OnInit {
 
 
   actualizarCliente(): void {
+
     if (this.viewClienteForm.invalid) return;
 
-    const dto = this.viewClienteForm.value;
+    // const dto = this.viewClienteForm.value;
+    const raw = this.viewClienteForm.getRawValue();
+    const dto = {
+      ...raw,
+      cumple:
+        raw.cumple && moment(raw.cumple).isValid()
+          ? moment(raw.cumple).format('YYYY-MM-DD') // ✅ Compatible con tu helper
+          : undefined
+    };
+
     const id = this.clienteId;
 
     this.clienteService.update(id, dto).subscribe({
