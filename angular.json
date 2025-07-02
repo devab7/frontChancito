@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Matdash": {
+    "Chanchito": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
               "moment",
               "dropzone"
             ],
-            "outputPath": "dist/Matdash",
+            "outputPath": "dist/Chanchito",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -40,6 +40,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -71,6 +77,7 @@
             "production": {
               "buildTarget": "Matdash:build:production"
             },
+
             "development": {
               "buildTarget": "Matdash:build:development"
             }

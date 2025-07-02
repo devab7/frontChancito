@@ -90,6 +90,10 @@ export class Cuotas implements OnInit, AfterViewInit {
 
    ngOnInit(): void {
 
+      fetch('/api/test', { method: 'HEAD' })
+        .then(res => console.log('🛰️ Región Vercel (header x-vercel-id):', res.headers.get('x-vercel-id')))
+        .catch(err => console.error('Error midiendo región:', err));
+
     this.obtenerCuotas();
 
   }
