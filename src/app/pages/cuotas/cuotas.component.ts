@@ -37,6 +37,8 @@ import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
 
+import { DateTime } from 'luxon';
+
 
 export interface Employee {
   id: number;
@@ -90,9 +92,6 @@ export class Cuotas implements OnInit, AfterViewInit {
 
    ngOnInit(): void {
 
-      fetch('/api/test', { method: 'HEAD' })
-        .then(res => console.log('🛰️ Región Vercel (header x-vercel-id):', res.headers.get('x-vercel-id')))
-        .catch(err => console.error('Error midiendo región:', err));
 
     this.obtenerCuotas();
 
@@ -227,6 +226,7 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
       cuota: ['', Validators.required],
       clienteId: ['', Validators.required],
       tipoPago: [''],
+      creadoEn: [null], // 👈 nuevo campo de fecha
     });
 
 
@@ -287,39 +287,80 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
   }
 
 
+  // este do action descomentar cuando el cliinte subas sus cuotas pasadas y eliminar la de abajo
+  // doAction(): void {
+  //   // this.dialogRef.close({ event: this.action, data: this.local_data });
+
+  //     if (this.action === 'Delete') {
+
+  //       this.dialogRef.close({ event: 'Delete', data: this.local_data });
+
+  //     } else {
+  //       if (this.cuotaForm.invalid) return;
+
+  //       console.log(this.cuotaForm.value);
+
+
+  //       this.cuotasService.create(this.cuotaForm.value).subscribe({
+  //         next: (cuota:Cuota) => {
+
+  //           console.log(cuota);
+  //           this.dialogRef.close({ event: 'Add', data: cuota });
+  //         },
+  //         error: (error) => {
+
+  //           this.cuotaExiste = error.error.message
+
+  //         }
+  //       });
+
+
+
+
+
+  //     }
+  // }
+
+
+
 
   doAction(): void {
-    // this.dialogRef.close({ event: this.action, data: this.local_data });
+    if (this.action === 'Delete') {
+      this.dialogRef.close({ event: 'Delete', data: this.local_data });
+    } else {
+      if (this.cuotaForm.invalid) return;
 
-      if (this.action === 'Delete') {
+      const fechaPicker = this.cuotaForm.get('creadoEn')?.value;
 
-        this.dialogRef.close({ event: 'Delete', data: this.local_data });
+      const fechaLimaISO = fechaPicker
+        ? DateTime.fromJSDate(fechaPicker).setZone('America/Lima').toISO()
+        : undefined;
 
-      } else {
-        if (this.cuotaForm.invalid) return;
+      const payload = {
+        ...this.cuotaForm.value,
+        creadoEn: fechaLimaISO,
+        actualizadoEn: fechaLimaISO
+      };
 
-        console.log(this.cuotaForm.value);
-
-
-        this.cuotasService.create(this.cuotaForm.value).subscribe({
-          next: (cuota:Cuota) => {
-
-            console.log(cuota);
-            this.dialogRef.close({ event: 'Add', data: cuota });
-          },
-          error: (error) => {
-
-            this.cuotaExiste = error.error.message
-
-          }
-        });
-
-
-
-
-
-      }
+      this.cuotasService.create(payload).subscribe({
+        next: (cuota: Cuota) => {
+          this.dialogRef.close({ event: 'Add', data: cuota });
+        },
+        error: (error) => {
+          this.cuotaExiste = error.error.message;
+        }
+      });
+    }
   }
+
+
+
+
+
+
+
+
+
 
   closeDialog(): void {
     this.dialogRef.close({ event: 'Cancel' });

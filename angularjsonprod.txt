@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Matdash": {
+    "Chanchito": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -108,5 +108,3 @@
     "analytics": false
   }
 }
-
-

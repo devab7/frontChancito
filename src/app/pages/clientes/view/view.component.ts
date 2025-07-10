@@ -16,6 +16,9 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 // import * as moment from 'moment';
 import * as moment from 'moment-timezone';
 import { CuotasService } from 'src/app/services/cuotas.service';
+import { RetirosService } from 'src/app/services/retiros.service';
+import { RetiroResponse } from 'src/app/interfaces/retiro-response.interface';
+import { CreateRetiroDto } from 'src/app/dtos/create-retiro.dto';
 
 
 
@@ -35,10 +38,20 @@ export class ViewComponent implements OnInit {
   private clienteService = inject(ClientesService);
   private cuotasService = inject(CuotasService);
   private fb = inject(FormBuilder);
+  private retiroService = inject(RetirosService);
 
   // Variables para el mes actual
   // nombreMes = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
   // mesCapitalizado = this.nombreMes.charAt(0).toUpperCase() + this.nombreMes.slice(1);
+
+  // Esto es para el retiro //
+  mesesDisponibles: { numero: number; nombre: string }[] = [];
+  resultadoRetiro: RetiroResponse | null = null;
+  errorRetiro = '';
+  selectedMes: number | null = null;
+  // Esto es para el retiro //
+
+  estadoMensualCliente: {} = {};
 
 
   clienteId!: number;
@@ -49,10 +62,15 @@ export class ViewComponent implements OnInit {
   cuotasMesForm!: FormGroup;
   filtroMesForm!: FormGroup;
   displayedColumns: string[] = ['dia', 'cantidad'];
+  displayedColumnsRetiro: string[] = ['mes', 'total', 'fechaRetiro'];
+
   dataSource1: any[] = [];
+  dataSourceRetiro: any[] = [];
   totalCuotasMes: number;
 
   mesConsulta: string;
+
+  retiroMesForm: FormGroup;
 
   ngOnInit() {
 
@@ -65,11 +83,17 @@ export class ViewComponent implements OnInit {
       this.cargarClienteConMes(nuevoMes); // se llama cuando elegís un mes
     });
 
+    // Para el select de retiro
+    this.mesesDisponibles = this.obtenerMesesHastaActual();
+    // Para el select de retiro
 
 
     // Form update customer
     this.route.params.subscribe(params => {
       this.clienteId = Number(params['id']);
+
+
+
 
       this.viewClienteForm = this.fb.group({
         dni: ['', [Validators.required]],
@@ -99,14 +123,77 @@ export class ViewComponent implements OnInit {
 
   }
 
+  esRetirado(row: any): boolean {
+    return row.estado === 'retirado'; // ajusta si el valor tiene mayúsculas o es booleano
+  }
+
+
+  realizarRetiro(): void {
+    if (!this.selectedMes) return;
+
+    const dto: CreateRetiroDto = {
+      clienteId: this.clienteId,
+      mes: this.selectedMes
+    };
+
+    this.errorRetiro = '';
+    this.resultadoRetiro = null;
+
+    this.retiroService.retirarMes(dto).subscribe({
+      next: (data) => {
+        this.resultadoRetiro = data;
+        console.log(data);
+
+        this.cargarClienteConMes();
+      },
+      error: (error) => {
+
+        this.errorRetiro = error?.error?.message || 'Error al retirar mes';
+        console.log(this.errorRetiro);
+      }
+    });
+  }
+
+
+  obtenerMesesHastaActual(): { numero: number; nombre: string }[] {
+
+    const mesActual = new Date().getMonth() + 1;
+
+    return Array.from({ length: mesActual }, (_, i) => {
+      const numero = i + 1;
+      const fecha = new Date(2025, i, 1);
+      const nombre = new Intl.DateTimeFormat('es-PE', { month: 'long' }).format(fecha);
+
+      return { numero, nombre };
+    });
+  }
+
+
+
   cargarClienteConMes(mes?: string) {
     const options = mes ? { params: { mes } } : {};
 
     this.clienteService.findOne(this.clienteId, options).subscribe(cliente => {
       this.cliente = cliente;
+      this.dataSourceRetiro = cliente.estadoMensual;
+      // this.dataSourceRetiro = cliente.estadoMensual.filter((item:any) => item.estado === 'retirado')
+
+
+      console.log(this.estadoMensualCliente);
+
 
       const mesNum = cliente.mes ?? moment().format('MM'); // fallback por si no viene
       this.mesConsulta = moment(mesNum, 'MM').locale('es').format('MMMM'); // ej: "junio"
+
+
+      // // LLena el select de retiro solo con los meses hasta el nmes actual que vien del servicio para traer el cliente
+      // this.mesesDisponibles = Array.from({ length: Number(cliente.mes) }, (_, i) => {
+      //   const mes = i + 1;
+      //   const nombre = new Intl.DateTimeFormat('es-PE', { month: 'long' }).format(new Date(2025, i, 1));
+      //   return { numero: mes, nombre };
+      // });
+      // // LLena el select de retiro solo con los meses hasta el nmes actual que vien del servicio para traer el cliente
+
 
       this.cuotasService.getCuotaBaseDelMes(this.clienteId, mes).subscribe(cuotaBase => {
         this.cuotaBaseCliente = cuotaBase?.cuotaBase ?? '0';
@@ -125,9 +212,12 @@ export class ViewComponent implements OnInit {
         direccion: cliente.direccion,
         lugarNacimiento: cliente.lugarNacimiento,
         telefono2: cliente.telefono2,
-        cumple: cliente.cumple
-          ? moment(cliente.cumple, 'DD/MM/YYYY')
-          : null
+        // Se parsea la fecha 'DD/MM/YYYY' proveniente del backend como objeto Moment
+        // para que el mat-datepicker la interprete correctamente sin desfase visual ni lógico
+        cumple: cliente.cumple ? moment(cliente.cumple, 'DD/MM/YYYY') : null,
+
+
+
       });
 
       const cuotasMap: { [dia: number]: number } = {};

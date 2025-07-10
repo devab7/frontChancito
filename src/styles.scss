@@ -53,7 +53,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* DETALLE CLIENTE */
 .header-table-cliente {
-  font-size: 17px !important;
+  font-size: 16px !important;
   font-weight: 600 !important;
 }
 .btn-action {
@@ -70,6 +70,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #f8285a33 !important;
   color: #ff6692 !important;
   font-weight: 700 !important;
+}
+.cuotaBase {
+    height: 48px !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: -9px !important;
 }
 
 
@@ -119,10 +125,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .custom-select .mdc-notched-outline {
     border: 1px solid #dddbff !important;
-    border-radius: 12px !important;
-}
+    height: 48px !important;
+  }
 
 .mat-mdc-select-value {
     text-align: center !important;
-    font-size: 17px !important;
+    // font-size: 17px !important;
+}
+
+.mat-mdc-select-placeholder {
+  color: #635bff !important;
+  font-weight: 700 !important;
+}
+
+.custom-select .mdc-notched-outline__leading,
+.custom-select .mdc-notched-outline__trailing {
+  border-radius: 0px !important;
+}
+
+
+.bg-mes-retirado {
+  background-color: #ffe7ef !important; /* rojo claro */
+  color: #ff6692 !important;            /* texto más intenso */
+}
+
+.bg-mes-retirado td {
+  border-bottom: 1px solid #ff6692 !important;
+}
+
+.tr-border td {
+  border-bottom: 1px solid #ddd !important;
 }

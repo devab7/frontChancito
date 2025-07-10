@@ -6,9 +6,9 @@ export interface Cliente {
   direccion?: string;
   lugarNacimiento?: string;
   telefono2?: string;
-  cumple?: Date;
-  creadoEn: Date;
-  actualizadoEn: Date;
-  totalCuotasMes: number;
+  cumple?: string | null;
+  creadoEn: string;
+  actualizadoEn: string;
+  // totalCuotasMes: number;
 }
 

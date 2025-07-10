@@ -37,8 +37,8 @@ export class AppSideLoginComponent {
   ) {}
 
   loginForm = new FormGroup({
-    username: new FormControl('trabajador', [Validators.required, Validators.minLength(3)]), // renombrado
-    password: new FormControl('789', [Validators.required]),
+    username: new FormControl('admin', [Validators.required, Validators.minLength(3)]), // renombrado
+    password: new FormControl('123', [Validators.required]),
   });
 
   get f() {

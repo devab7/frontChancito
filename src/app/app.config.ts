@@ -46,6 +46,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
 import { NgxEchartsModule } from 'ngx-echarts';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { TokenRefreshInterceptor } from './interceptors/token-refresh.interceptor';
+import { AuthSessionInterceptor } from './interceptors/auth-session.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -87,12 +88,16 @@ export const appConfig: ApplicationConfig = {
 
     // Configuración global de fechas con formato DD/MM/YYYY y soporte para UTC usando Moment Adapter
     { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    // ✅ useUtc: false: Se desactiva el modo UTC para que Moment respete el offset de zona horaria
+    // Esto permite que las fechas ISO provenientes del backend (ej. -05:00 zona Lima)
+    // se interpreten correctamente en el mat-datepicker sin desfases ni conversiones erróneas
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: false } },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
     { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA_APP },
 
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: TokenRefreshInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthSessionInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: TokenRefreshInterceptor, multi: true }
 
 
   ],
