@@ -11,7 +11,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-btn-add {
     height: 44px !important;
     background-color: #d70000 !important;
+    color: #fff !important
 }
+
+
 
 /* BUTTON CUSTOMIZER */
 .customizerBtn {
@@ -78,13 +81,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     margin-top: -9px !important;
 }
 
-
-@media (width < 768px) {
-  button.button-space {
-    margin-top: 15px !important; // o lo que necesites
-  }
-}
-
 /* CUOTAS */
 .bg-pago {
   padding: 2px 1px;
@@ -129,8 +125,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 
 .mat-mdc-select-value {
-    text-align: center !important;
-    // font-size: 17px !important;
+    /* text-align: center !important; */
+    color: #717171 !important;
+    font-size: 14px !important;
 }
 
 .mat-mdc-select-placeholder {
@@ -155,4 +152,84 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .tr-border td {
   border-bottom: 1px solid #ddd !important;
+}
+
+
+
+/* SNACKBAR MESSAGES */
+.mat-mdc-snack-bar-label {
+  text-align: center !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+.bg-success .mdc-snackbar__surface {
+
+  background-color: #36c76c !important;
+}
+.bg-error .mdc-snackbar__surface {
+
+  background-color: #e94141 !important;
+}
+
+
+
+
+/* SELECTS CLIENTE VIEW */
+.custom-select .mdc-notched-outline__trailing,
+.custom-select .mdc-notched-outline__leading {
+  border: none !important
+}
+
+.custom-select .mat-mdc-select-arrow svg {
+  fill: #0000008a !important
+}
+
+
+
+/* LOGIN */
+input.input-login::placeholder,
+input.input-login {
+  color: #fff !important
+}
+
+
+@media (width < 768px) {
+
+  .mt-mobile {
+    margin-top: 15px !important;
+  }
+  .px-mobile {
+    padding: 0 15px !important;
+  }
+
+  /* VIEW CLIENTE */
+  .cliente-total {
+    order: 1 !important
+  }
+  .cliente-retiro {
+    order: 2 !important
+  }
+  .cliente-form {
+    order: 3 !important
+  }
+
+  /* SIDEBAR */
+  .branding img {
+    display: none;
+  }
+  .icon-close-sidebar {
+    height: 28px !important;
+    width: 28px !important;
+    color: #d70000;
+    margin-right: 15px !important;
+  }
+
+  table th.mat-mdc-header-cell {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+  }
+
+  button.button-space {
+    margin-top: 15px !important; // o lo que necesites
+  }
 }

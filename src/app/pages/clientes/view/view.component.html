@@ -1,6 +1,6 @@
 <div class="row">
 
-  <div class="col-lg-4">
+  <div class="col-lg-4 cliente-form">
     <mat-card class="cardWithShadow theme-card">
 
       <mat-card-content class="b-t-1">
@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="dni" placeholder="43559865" />
+                <input matInput formControlName="dni" placeholder="DNI" type="text"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="id" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -24,7 +24,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="nombres" placeholder="Juan Alvarez"/>
+                <input matInput formControlName="nombres" placeholder="Nombres completos" type="text"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="user" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="telefono" placeholder="987 654321" type="email" />
+                <input matInput formControlName="telefono" placeholder="Teléfono" type="tel" />
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -50,7 +50,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="direccion" placeholder="Av. Méxivo 654 - San Borja" />
+                <input matInput formControlName="direccion" placeholder="Dirección" type="text"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="map-pin" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="lugarNacimiento" placeholder="Trujillo" />
+                <input matInput formControlName="lugarNacimiento" placeholder="Lugar de nacimiento" type="text"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="world" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -76,7 +76,7 @@
             </div>
             <div class="col-sm-12">
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="telefono2" placeholder="98 456123" />
+                <input matInput formControlName="telefono2" placeholder="Teléfono2" type="tel"/>
                 <mat-icon matPrefix class="op-5">
                   <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
                 </mat-icon>
@@ -108,7 +108,7 @@
           </div>
           <div class="row justify-content-end">
             <div class="col-sm-12">
-              <button mat-flat-button color="primary" class="btn-l"  [disabled]="viewClienteForm.invalid">Actualizar</button>
+              <button mat-flat-button color="primary" class="btn-l rounded-0"  [disabled]="viewClienteForm.invalid">Actualizar</button>
             </div>
           </div>
         </form>
@@ -116,7 +116,7 @@
     </mat-card>
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-lg-4 cliente-total">
 
     <mat-card class="cardWithShadow theme-card">
 
@@ -126,17 +126,17 @@
 
           <div class="col-lg-12 d-flex align-items-center justify-content-end">
             <mat-card class="mat-mdc-card mdc-card shadow-none m-b-0 p-12 bg-light-success text-center rounded-0 w-100">
-              <h6 class="text-success m-0 f-s-18 f-w-500"><span class="m-x-6">Total acumulado: </span>  <span class="f-w-700">S/  {{ cliente?.saldoRealAcumulado | number:'1.2-2' }} </span></h6>
+              <h6 class="text-success m-0 f-s-18 f-w-500"><span class="m-x-6">Total Acumulado: </span>  <span class="f-w-700">S/  {{ cliente?.saldoRealAcumulado | number:'1.2-2' }} </span></h6>
             </mat-card>
           </div>
 
           <div class="col-lg-12 d-flex align-items-center justify-content-end m-t-16">
             <mat-card class="mat-mdc-card mdc-card shadow-none m-b-0 p-12 bg-light-primary text-center rounded-0 w-100">
-              <h6 class="text-primary f-w-500 m-0 f-s-18"><span class="m-x-6">Total de {{ mesConsulta | uppercase }}: </span>  <span class="f-w-700">S/  {{ totalCuotasMes | number:'1.2-2' }}</span></h6>
+              <h6 class="text-primary f-w-500 m-0 f-s-18"><span class="m-x-6">Total {{ mesConsulta | titlecase }}: </span>  <span class="f-w-700">S/  {{ totalCuotasMes | number:'1.2-2' }}</span></h6>
             </mat-card>
           </div>
 
-          <div class="col-lg-4 d-flex align-items-center justify-content-end" style="padding-right: 0px">
+          <div class="col-lg-4 d-flex align-items-center justify-content-end px-mobile mt-mobile" style="padding-right: 0px">
             <mat-card class="mat-mdc-card mdc-card shadow-none m-b-0 bg-light-primary text-center rounded-0 w-100 cuotaBase">
               <span class="text-primary f-w-600 m-0 f-s-14">BASE: S/ {{ cuotaBaseCliente }} </span>
             </mat-card>
@@ -144,7 +144,7 @@
 
           <div class="col-lg-8 d-flex align-items-center justify-content-end">
             <form [formGroup]="filtroMesForm" class="w-100">
-              <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
+              <!-- <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
                 <mat-select value="0" formControlName="mes" placeholder="CONSULTE UN MES">
                   <mat-option [value]="'01'">Enero</mat-option>
                   <mat-option [value]="'02'">Febrero</mat-option>
@@ -159,9 +159,22 @@
                   <mat-option [value]="'11'">Noviembre</mat-option>
                   <mat-option [value]="'12'">Diciembre</mat-option>
                 </mat-select>
+              </mat-form-field> -->
+
+
+              <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
+                <mat-select formControlName="mes" placeholder="CONSULTE UN MES">
+                  <mat-option *ngFor="let mes of mesesDisponibles" [value]="mes.numero.toString().padStart(2, '0')">
+                    {{ mes.nombre | titlecase }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
+
+
             </form>
           </div>
+
+
 
 
         </div>
@@ -203,7 +216,7 @@
 
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-lg-4 cliente-retiro">
 
     <mat-card class="cardWithShadow theme-card">
 

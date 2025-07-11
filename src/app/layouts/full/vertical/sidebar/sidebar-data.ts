@@ -13,13 +13,18 @@ export const navItems: NavItem[] = [
     route: '/pages/clientes',
   },
   {
-    displayName: 'Cuotas del Día',
+    displayName: 'Cuotas',
+    iconName: 'solar:chat-round-money-outline',
+    route: '/pages/cuotas',
+  },
+  {
+    displayName: 'Cuotas Diarias',
     iconName: 'solar:hand-money-outline',
     route: '/pages/cuotas-dia',
   },
   {
-    displayName: 'Cuotas',
+    displayName: 'Cuotas Mensuales',
     iconName: 'solar:chat-round-money-outline',
-    route: '/pages/cuotas',
+    route: '/pages/cuotas-mes',
   },
 ];

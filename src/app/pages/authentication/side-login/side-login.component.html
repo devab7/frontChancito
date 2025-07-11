@@ -1,6 +1,6 @@
 <div class="blank-layout-container justify-content-center">
   <div class="position-relative row w-100 h-100">
-    <div class="col-lg-4" style="background-color:#ff3838">
+    <div class="col-lg-4" style="background-color:#ff3d4d">
       <div
         class="d-flex align-items-start align-items-lg-center justify-content-center h-100"
       >
@@ -62,7 +62,7 @@
                 class="w-100"
                 color="primary"
               >
-                <input matInput formControlName="username" />
+                <input matInput formControlName="username" class="input-login"/>
                 @if(f['username'].touched && f['username'].invalid) {
                 <mat-hint class="m-b-16 error-msg">
                   @if(f['username'].errors && f['username'].errors['required']) {
@@ -83,7 +83,7 @@
                 class="w-100"
                 color="primary"
               >
-                <input matInput type="password" formControlName="password" />
+                <input matInput type="password" formControlName="password" class="input-login"/>
                 @if(f['password'].touched && f['password'].invalid) {
                 <mat-hint class="m-b-16 error-msg">
                   @if( f['password'].errors && f['password'].errors['required'])
@@ -133,7 +133,7 @@
     <div
       class="col-lg-8 position-relative overflow-hidden bg-dark-200 d-none d-lg-block" style="background-color: #ffa0a0 !important"
     >
-      <div class="circle-top" style="border-color: #b20000 !important"></div>
+      <div class="circle-top" style="border-color: #ec727c !important"></div>
       <div>
         <img
           src="/assets/images/logos/logo-chanchito.png"
@@ -144,11 +144,11 @@
       <div class="d-flex align-items-center z-1 position-relative h-n80">
         <div class="row justify-content-center w-100">
           <div class="col-lg-6">
-            <h1 class="text-white m-b-16" style="color:#b20000 !important; font-size: 40px">
+            <h1 class="text-white m-b-10" style="color:#484848 !important; font-size: 40px">
               Bienvenido a
               Chanchito
             </h1>
-            <span class="op-75 f-s-18 text-white d-block m-b-16" style="color:#b20000 !important">
+            <span class="op-75 f-s-18 text-white d-block m-b-16" style="color:#484848 !important">
               Gestión de ahorros de clientes que confian en nosotros.<br />
               <!-- Desarrollado por: Dacorsoft. -->
             </span>

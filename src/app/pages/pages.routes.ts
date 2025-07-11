@@ -4,6 +4,7 @@ import { Clientes } from './clientes/clientes.component';
 import { ViewComponent } from './clientes/view/view.component';
 import { Cuotas } from './cuotas/cuotas.component';
 import { CuotasDia } from './cuotas-dia/cuotas-dia.component';
+import { CuotasMesComponent } from './cuotas-mes/cuotas-mes.component';
 
 export const PagesRoutes: Routes = [
   {
@@ -54,16 +55,28 @@ export const PagesRoutes: Routes = [
   },
   },
   {
-  path: 'cuotas-dia',
-  component: CuotasDia,
-  data: {
-    title: 'Cuotas del Día',
-    // breadcrumb: true,
-    urls: [
-      { title: 'Escritorio', url: '/dashboards/dashboard1' },
-      { title: 'Cuotas del Día' },
-    ],
+    path: 'cuotas-dia',
+    component: CuotasDia,
+    data: {
+      title: 'Cuotas Diarias',
+      // breadcrumb: true,
+      urls: [
+        { title: 'Escritorio', url: '/dashboards/dashboard1' },
+        { title: 'Cuotas Diarias' },
+      ],
+    },
   },
+  {
+    path: 'cuotas-mes',
+    component: CuotasMesComponent,
+    data: {
+      title: 'Cuotas Mensuales',
+      // breadcrumb: true,
+      urls: [
+        { title: 'Escritorio', url: '/dashboards/dashboard1' },
+        { title: 'Cuotas Mensuales' },
+      ],
+    },
   },
 
 ];

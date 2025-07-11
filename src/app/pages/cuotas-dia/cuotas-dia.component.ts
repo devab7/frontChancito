@@ -58,6 +58,7 @@ export interface Employee {
   providers: [DatePipe],
 })
 export class CuotasDia implements OnInit, AfterViewInit {
+
   @ViewChild(MatTable, { static: true }) table: MatTable<any> =
     Object.create(null);
   searchText: any;

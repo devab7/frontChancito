@@ -19,7 +19,7 @@
 
       <div class="col-lg-6">
         <mat-form-field appearance="outline" class="w-100">
-          <input type="text" matInput formControlName="telefono" placeholder="Teléfono" />
+          <input type="tel" matInput formControlName="telefono" placeholder="Teléfono" />
         </mat-form-field>
       </div>
 
@@ -37,7 +37,7 @@
 
       <div class="col-lg-6">
         <mat-form-field appearance="outline" class="w-100">
-          <input type="text" matInput formControlName="telefono2" placeholder="Teléfono 2" />
+          <input type="text" matInput formControlName="telefono2" placeholder="Teléfono2" />
         </mat-form-field>
       </div>
 
@@ -50,10 +50,10 @@
       </div>
     </div>
 
-    <button mat-flat-button color="primary" [disabled]="clienteForm.invalid" (click)="doAction()">
+    <button mat-flat-button color="primary" [disabled]="clienteForm.invalid" (click)="doAction()" class="rounded-0">
       {{ action }}
     </button>
-    <button mat-stroked-button color="warn" class="m-l-8" (click)="closeDialog()">
+    <button mat-stroked-button color="warn" class="m-l-8" (click)="closeDialog()" class="m-l-8 rounded-0">
       Cancel
     </button>
   </form>

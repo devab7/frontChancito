@@ -34,6 +34,8 @@ import { Cliente } from 'src/app/interfaces/cliente.interface';
 // services
 import { ClientesService } from 'src/app/services/clientes.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { messages } from '../apps/chat/chat-data';
 
 export interface Employee {
   id: number;
@@ -56,7 +58,7 @@ export interface Employee {
     MatNativeDateModule,
     NgScrollbarModule,
     CommonModule,
-    RouterModule,
+    RouterModule
   ],
   providers: [DatePipe],
 })
@@ -214,7 +216,7 @@ obtenerClientes(): void {
   // tslint:disable-next-line: component-selector
   selector: 'app-dialog-content',
   standalone: true,
-  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule],
+  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule, MatSnackBarModule],
   providers: [DatePipe],
   templateUrl: 'clientes-dialog-content.html',
 })
@@ -234,13 +236,14 @@ export class AppKichenSinkDialogContentComponent {
     // @Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Employee,
     private fb: FormBuilder,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private snackBar: MatSnackBar
   ) {
 
     this.clienteForm = this.fb.group({
-      dni: [data.dni || '', [Validators.required, Validators.minLength(8)]],
+      dni: [data.dni || '', [Validators.required, Validators.pattern(/^\d{8}$/)]],
       nombres: [data.nombrecompleto || '', Validators.required],
-      telefono: [data.telefono || '', Validators.required],
+      telefono: [data.telefono || '', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       direccion: [data.dirección || ''],
       lugarNacimiento: [data.lugar || ''],
       telefono2: [data.telefono2 || ''],
@@ -282,9 +285,26 @@ doAction(): void {
           : null
       };
 
-      this.clientesService.create(dto).subscribe(cliente => {
-        this.dialogRef.close({ event: 'Add', data: cliente });
+      // this.clientesService.create(dto).subscribe(cliente => {
+      //   this.dialogRef.close({ event: 'Add', data: cliente });
+      // });
+
+      this.clientesService.create(dto).subscribe({
+        next: (cliente) => {
+          this.dialogRef.close({ event: 'Add', data: cliente });
+        },
+        error: (err) => {
+
+          this.snackBar.open(err.error.message, undefined, {
+            duration: 3500,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['bg-error']
+          });
+
+        }
       });
+
 
 
 

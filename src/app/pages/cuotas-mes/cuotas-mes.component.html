@@ -16,25 +16,25 @@
 
       <div class="col-lg-2 d-flex align-items-center justify-content-end mt-mobile">
         <mat-card class="shadow-none m-b-0 p-12 bg-light-error text-center rounded-0 w-100">
-          <h6 class="text-error f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">EFECTIVO: </span>  S/. {{ totalPorTipoPago['efectivo'] | number:'1.2-2' }}</h6>
+          <h6 class="text-error f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">EFECTIVO: </span>  S/. {{ getTotalPorTipo('efectivo') | number:'1.2-2' }} </h6>
         </mat-card>
       </div>
 
       <div class="col-lg-2 d-flex align-items-center justify-content-end mt-mobile">
         <mat-card class="shadow-none m-b-0 p-12 bg-light-success text-center rounded-0 w-100">
-          <h6 class="text-success f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">INTERBANK: </span>  S/. {{ totalPorTipoPago['interbank'] | number:'1.2-2' }}</h6>
+          <h6 class="text-success f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">INTERBANK: </span>  S/. {{ getTotalPorTipo('interbank') | number:'1.2-2' }}</h6>
         </mat-card>
       </div>
 
       <div class="col-lg-2 d-flex align-items-center justify-content-end mt-mobile">
         <mat-card class="shadow-none m-b-0 p-12 bg-light-primary text-center rounded-0 w-100">
-          <h6 class="text-primary f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">BCP: </span>  S/. {{ totalPorTipoPago['bcp'] | number:'1.2-2' }}</h6>
+          <h6 class="text-primary f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">BCP: </span>  S/. {{ getTotalPorTipo('bcp') | number:'1.2-2' }}</h6>
         </mat-card>
       </div>
 
       <div class="col-lg-2 d-flex align-items-center justify-content-end mt-mobile">
         <mat-card class="shadow-none m-b-0 p-12 text-center rounded-0 w-100 custom-btn-add">
-          <h6 class="text-light f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">TOTAL: </span>  S/. {{ totalCuotasDia | number:'1.2-2' }}</h6>
+          <h6 class="text-light f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">TOTAL: </span>  S/. {{ totalAnual | number:'1.2-2' }}</h6>
         </mat-card>
       </div>
     </div>
@@ -51,9 +51,9 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="cliente">
-          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">Cliente</th>
-          <td mat-cell *matCellDef="let element" width="30%">
+        <ng-container matColumnDef="mes">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">Mes</th>
+          <td mat-cell *matCellDef="let element" width="20%">
             <div class="d-flex align-items-center">
               <!-- <img
                 class="rounded-circle"
@@ -62,8 +62,8 @@
                 /> -->
 
                 <div class=""> <!-- <div class="m-l-16"> -->
-                  <p class="mat-subtitle-1 f-s-14 m-t-0">
-                    {{ element.cliente.nombres }}
+                  <p class="mat-subtitle-1 f-s-15 m-t-0">
+                    {{ element.mes | titlecase }}
                   </p>
                   <!-- <small class="mat-body-1 f-s-14">{{ element.dni }}</small> -->
                 </div>
@@ -71,13 +71,12 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="importe">
+
+        <ng-container matColumnDef="total">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
-            Cuota (S/)
+            Total
           </th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">
-            S/. {{ element.cuota }}
-          </td>
+          <td mat-cell *matCellDef="let element" class="f-s-15" width="20%">S/ {{ element.total | number:'1.2-2' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="tipoPago">
@@ -85,17 +84,13 @@
             Tipo de pago
           </th>
           <td mat-cell *matCellDef="let element" class="f-s-14">
-            <span [tipoPagoColor]="element.tipoPago" class="bg-pago">
-              {{ element.tipoPago }}
-            </span>
+            <ng-container *ngFor="let tipo of element.porTipoPago">
+              <span [tipoPagoColor]="tipo.nombre" class="bg-pago m-r-8" style="font-size: 14px; width: fit-content; padding: 3px 10px; font-weight:500">
+                S/{{ tipo.monto | number:'1.2-2' }}
+                <!-- {{ tipo.nombre }} : S/{{ tipo.monto | number:'1.2-2' }} -->
+              </span>
+            </ng-container>
           </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fecha">
-          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
-            Fecha
-          </th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.creadoEn }}</td>
         </ng-container>
 
         <!-- <ng-container matColumnDef="action">
@@ -122,7 +117,7 @@
       </table>
       <mat-paginator
         [pageSizeOptions]="[50, 100, 200]"
-        showFirstLastButtons class="mt-5"
+        showFirstLastButtons class="mt-5" style="display: none"
       ></mat-paginator>
     </div>
   </mat-card-content>

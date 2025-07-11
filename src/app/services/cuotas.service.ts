@@ -32,6 +32,11 @@ export class CuotasService {
     return this.http.get<Cuota[]>(`${this.apiUrl}/reporte/dia`);
   }
 
+   // Obtener todas las cuotas mensuales
+  findAllCuotasMensuales(): Observable<Cuota[]> {
+    return this.http.get<Cuota[]>(`${this.apiUrl}/reporte/mensual`);
+  }
+
   // Obtener un cuota por ID
   findOne(id: number): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.apiUrl}/${id}`);

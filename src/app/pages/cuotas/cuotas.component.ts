@@ -223,7 +223,7 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
 
 
     this.cuotaForm = this.fb.group({
-      cuota: ['', Validators.required],
+      cuota: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]],
       clienteId: ['', Validators.required],
       tipoPago: [''],
       creadoEn: [null], // 👈 nuevo campo de fecha

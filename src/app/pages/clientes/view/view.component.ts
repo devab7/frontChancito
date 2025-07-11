@@ -19,13 +19,14 @@ import { CuotasService } from 'src/app/services/cuotas.service';
 import { RetirosService } from 'src/app/services/retiros.service';
 import { RetiroResponse } from 'src/app/interfaces/retiro-response.interface';
 import { CreateRetiroDto } from 'src/app/dtos/create-retiro.dto';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
 @Component({
   selector: 'app-form-vertical',
   standalone: true,
-  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule],
+  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule, MatSnackBarModule],
   providers: [provideMomentDateAdapter()],
   templateUrl: './view.component.html',
 })
@@ -72,6 +73,12 @@ export class ViewComponent implements OnInit {
 
   retiroMesForm: FormGroup;
 
+
+
+  constructor( private snackBar: MatSnackBar ) { }
+
+
+
   ngOnInit() {
 
     // Form filtro por mes
@@ -98,7 +105,7 @@ export class ViewComponent implements OnInit {
       this.viewClienteForm = this.fb.group({
         dni: ['', [Validators.required]],
         nombres: ['', [Validators.required]],
-        telefono: [''],
+        telefono: ['', [Validators.required]],
         direccion: [''],
         lugarNacimiento: [''],
         telefono2: [''],
@@ -149,7 +156,14 @@ export class ViewComponent implements OnInit {
       error: (error) => {
 
         this.errorRetiro = error?.error?.message || 'Error al retirar mes';
-        console.log(this.errorRetiro);
+
+        this.snackBar.open(error.error.message, undefined, {
+          duration: 3500,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['bg-error']
+        });
+        console.log(error);
       }
     });
   }
@@ -241,7 +255,7 @@ export class ViewComponent implements OnInit {
 
 
 
-  constructor() { }
+  // constructor() { }
 
 
   actualizarCliente(): void {
@@ -265,8 +279,18 @@ export class ViewComponent implements OnInit {
         console.log('✅ Cliente actualizado:', clienteActualizado);
         console.log(clienteActualizado);
 
+
+        this.snackBar.open('Actualizado correctamente', undefined, {
+          duration: 3500,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['bg-success']
+        });
+
+
+
         // Podés actualizar el estado local si lo necesitás
-        this.cliente = clienteActualizado;
+        // this.cliente = clienteActualizado;
       },
       error: (err) => {
         console.error('❌ Error al actualizar el cliente:', err);
