@@ -1,8 +1,8 @@
 <mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <div class="row justify-content-between">
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100 hide-hint">
+      <div class="col-lg-2">
+        <!-- <mat-form-field appearance="outline" class="w-100 hide-hint">
           <input
             matInput
             placeholder="Buscar cliente"
@@ -11,7 +11,7 @@
           <mat-icon matSuffix>
             <i-tabler name="search" class="icon-20"></i-tabler>
           </mat-icon>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
 
       <div class="col-lg-2 d-flex align-items-center justify-content-end mt-mobile">
@@ -37,12 +37,17 @@
           <h6 class="text-light f-w-700 m-0 f-s-16"><span class="f-s-12 m-x-6">TOTAL: </span>  S/. {{ totalAnual | number:'1.2-2' }}</h6>
         </mat-card>
       </div>
+
+      <div class="col-lg-2"></div>
+
     </div>
   </mat-card-content>
 </mat-card>
 <mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <div class="table-responsive">
+
+      <app-loader [visible]="loading" mode="fullscreen" [size]="60" />
       <table mat-table [dataSource]="dataSource" class="w-100 custom-table">
         <ng-container matColumnDef="#">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">#</th>

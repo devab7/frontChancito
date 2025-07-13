@@ -31,7 +31,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     margin-left: 3px;
     font-size: 25px;
     font-weight: 700;
-    margin-top: 14px;
+    margin-top: 8px;
 }
 
 
@@ -125,9 +125,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 
 .mat-mdc-select-value {
-    /* text-align: center !important; */
+    // text-align: center !important;
     color: #717171 !important;
     font-size: 14px !important;
+}
+.select-view-cliente .mat-mdc-select-value {
+    text-align: center !important;
 }
 
 .mat-mdc-select-placeholder {
@@ -164,11 +167,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .bg-success .mdc-snackbar__surface {
 
-  background-color: #36c76c !important;
+  background-color: #4ace7b !important;
 }
 .bg-error .mdc-snackbar__surface {
 
-  background-color: #e94141 !important;
+  background-color: #ff3d4d !important;
 }
 
 

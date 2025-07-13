@@ -20,13 +20,14 @@ import { RetirosService } from 'src/app/services/retiros.service';
 import { RetiroResponse } from 'src/app/interfaces/retiro-response.interface';
 import { CreateRetiroDto } from 'src/app/dtos/create-retiro.dto';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoaderComponent } from '../../ui-components/loader/loader.component';
 
 
 
 @Component({
   selector: 'app-form-vertical',
   standalone: true,
-  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule, MatSnackBarModule],
+  imports: [MaterialModule, TablerIconsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, ReactiveFormsModule, CommonModule, MatSnackBarModule, LoaderComponent ],
   providers: [provideMomentDateAdapter()],
   templateUrl: './view.component.html',
 })
@@ -34,6 +35,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 export class ViewComponent implements OnInit {
+
+  loadingButton:boolean = false;
+  loadingConsulte:boolean = false;
+  loadingRetire:boolean = false;
+  loadingTables:boolean = true;
 
   private route = inject(ActivatedRoute);
   private clienteService = inject(ClientesService);
@@ -87,6 +93,7 @@ export class ViewComponent implements OnInit {
     });
 
     this.filtroMesForm.get('mes')!.valueChanges.subscribe((nuevoMes: string) => {
+
       this.cargarClienteConMes(nuevoMes); // se llama cuando elegís un mes
     });
 
@@ -113,10 +120,8 @@ export class ViewComponent implements OnInit {
       });
 
       this.cuotasService.getCuotaBaseDelMes(this.clienteId).subscribe(cuotaBase => {
-        console.log('🧾 Cuota base del mes:', cuotaBase);
 
         this.cuotaBaseCliente = cuotaBase?.cuotaBase ?? '0';
-
       });
 
 
@@ -138,6 +143,10 @@ export class ViewComponent implements OnInit {
   realizarRetiro(): void {
     if (!this.selectedMes) return;
 
+    this.loadingRetire = true;
+
+    // this.loading = true;
+
     const dto: CreateRetiroDto = {
       clienteId: this.clienteId,
       mes: this.selectedMes
@@ -148,22 +157,37 @@ export class ViewComponent implements OnInit {
 
     this.retiroService.retirarMes(dto).subscribe({
       next: (data) => {
-        this.resultadoRetiro = data;
-        console.log(data);
 
-        this.cargarClienteConMes();
+        this.resultadoRetiro = data;
+        this.loadingRetire = false;
+        // this.cargarClienteConMes();
+
+        // Refresca los datos del cliente usando el mes que actualmente esta seleccionado en el select consulte mes.
+        // Así evitamos que se cargue el mes actual por defecto y mantiene la vista coherente.
+        const mesActualSeleccionadoEnConsulteMes = this.filtroMesForm.get('mes')!.value;
+        this.cargarClienteConMes(mesActualSeleccionadoEnConsulteMes);
+
+
       },
       error: (error) => {
 
+        this.loadingRetire = false;
         this.errorRetiro = error?.error?.message || 'Error al retirar mes';
 
         this.snackBar.open(error.error.message, undefined, {
-          duration: 3500,
+          duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
           panelClass: ['bg-error']
         });
-        console.log(error);
+      },
+      complete: () => {
+        this.snackBar.open('Se retiró correctamente', undefined, {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['bg-success']
+        });
       }
     });
   }
@@ -187,37 +211,28 @@ export class ViewComponent implements OnInit {
   cargarClienteConMes(mes?: string) {
     const options = mes ? { params: { mes } } : {};
 
+
+    if(mes)
+    this.loadingConsulte = true;
+
+
     this.clienteService.findOne(this.clienteId, options).subscribe(cliente => {
+
+      this.loadingConsulte = false;
+      this.loadingTables = false;
+
       this.cliente = cliente;
       this.dataSourceRetiro = cliente.estadoMensual;
-      // this.dataSourceRetiro = cliente.estadoMensual.filter((item:any) => item.estado === 'retirado')
-
-
-      console.log(this.estadoMensualCliente);
-
 
       const mesNum = cliente.mes ?? moment().format('MM'); // fallback por si no viene
       this.mesConsulta = moment(mesNum, 'MM').locale('es').format('MMMM'); // ej: "junio"
-
-
-      // // LLena el select de retiro solo con los meses hasta el nmes actual que vien del servicio para traer el cliente
-      // this.mesesDisponibles = Array.from({ length: Number(cliente.mes) }, (_, i) => {
-      //   const mes = i + 1;
-      //   const nombre = new Intl.DateTimeFormat('es-PE', { month: 'long' }).format(new Date(2025, i, 1));
-      //   return { numero: mes, nombre };
-      // });
-      // // LLena el select de retiro solo con los meses hasta el nmes actual que vien del servicio para traer el cliente
 
 
       this.cuotasService.getCuotaBaseDelMes(this.clienteId, mes).subscribe(cuotaBase => {
         this.cuotaBaseCliente = cuotaBase?.cuotaBase ?? '0';
       });
 
-
       this.totalCuotasMes = cliente.totalCuotasMes;
-
-      console.log(cliente);
-
 
       this.viewClienteForm.patchValue({
         dni: cliente.dni,
@@ -229,8 +244,6 @@ export class ViewComponent implements OnInit {
         // Se parsea la fecha 'DD/MM/YYYY' proveniente del backend como objeto Moment
         // para que el mat-datepicker la interprete correctamente sin desfase visual ni lógico
         cumple: cliente.cumple ? moment(cliente.cumple, 'DD/MM/YYYY') : null,
-
-
 
       });
 
@@ -262,6 +275,10 @@ export class ViewComponent implements OnInit {
 
     if (this.viewClienteForm.invalid) return;
 
+
+    this.loadingButton = true;
+
+
     // const dto = this.viewClienteForm.value;
     const raw = this.viewClienteForm.getRawValue();
     const dto = {
@@ -276,10 +293,8 @@ export class ViewComponent implements OnInit {
 
     this.clienteService.update(id, dto).subscribe({
       next: (clienteActualizado) => {
-        console.log('✅ Cliente actualizado:', clienteActualizado);
-        console.log(clienteActualizado);
 
-
+        this.loadingButton = false;
         this.snackBar.open('Actualizado correctamente', undefined, {
           duration: 3500,
           verticalPosition: 'top',
@@ -287,13 +302,9 @@ export class ViewComponent implements OnInit {
           panelClass: ['bg-success']
         });
 
-
-
-        // Podés actualizar el estado local si lo necesitás
         // this.cliente = clienteActualizado;
       },
       error: (err) => {
-        console.error('❌ Error al actualizar el cliente:', err);
       }
     });
   }

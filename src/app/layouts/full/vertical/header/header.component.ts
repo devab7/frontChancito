@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AppSettings } from 'src/app/config';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoaderComponent } from 'src/app/pages/ui-components/loader/loader.component';
 
 interface notifications {
   id: number;
@@ -52,11 +53,14 @@ interface apps {
     NgScrollbarModule,
     TablerIconsModule,
     MaterialModule,
+    LoaderComponent
   ],
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent {
+
+  loading:boolean = false;
   @Input() showToggle = true;
   @Input() toggleChecked = false;
   @Output() toggleMobileNav = new EventEmitter<void>();
@@ -117,7 +121,7 @@ export class HeaderComponent {
     const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -127,9 +131,32 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/authentication/login']);
+
+
+    this.loading = true;
+
+    // this.authService.logout().subscribe(() => {
+
+    //   this.loading = false;
+    //   this.router.navigate(['/authentication/login']);
+    // });
+
+    this.authService.logout().subscribe({
+      next: () => {
+        // Podés limpiar tokens, cookies u otros estados aquí si es necesario
+      },
+      error: (err) => {
+        this.loading = false;
+        // console.error('Logout fallido:', err);
+      },
+      complete: () => {
+        this.loading = false;
+        this.router.navigate(['/authentication/login']);
+      }
     });
+
+
+
   }
 
 

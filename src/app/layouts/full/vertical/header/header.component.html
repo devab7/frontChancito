@@ -248,7 +248,7 @@
           <h6
             class="f-s-14 f-w-600 m-0 mat-subtitle-1 d-flex align-items-center"
           >
-            Bienvenido a CHANCHITO
+            Bienvenido a <span style="color:#ff3d4d; margin-left: 7px" class="f-w-700">CHANCHITO</span>
             <!-- <span class="f-s-14 d-block text-success m-l-4">Pro</span> -->
           </h6>
           <!-- <span> CHANCHITO </span> -->
@@ -277,11 +277,12 @@
 
     <a class="p-8 text-decoration-none d-block text-hover-primary" role="button" (click)="logout()" style="cursor: pointer;">
       <div class="d-flex align-items-center">
-        <h5 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text">
-          Cerrar sesión
+        <h5 class="f-s-14 f-w-700 m-0 textprimary mat-subtitle-1 hover-text" style="color:#ff3d4d">
+          CERRAR SESIÓN
         </h5>
       </div>
     </a>
+    <app-loader [visible]="loading" mode="fullscreen" [size]="60" />
 
     </div>
   </mat-menu>

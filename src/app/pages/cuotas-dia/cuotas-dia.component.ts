@@ -32,6 +32,7 @@ import { RouterModule } from '@angular/router';
 import { CuotasService } from 'src/app/services/cuotas.service';
 import { Cuota } from 'src/app/interfaces/cuota.interface';
 import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
+import { LoaderComponent } from '../ui-components/loader/loader.component';
 
 export interface Employee {
   id: number;
@@ -53,11 +54,14 @@ export interface Employee {
     NgScrollbarModule,
     CommonModule,
     RouterModule,
-    TipoPagoColorDirective
+    TipoPagoColorDirective,
+    LoaderComponent
   ],
   providers: [DatePipe],
 })
 export class CuotasDia implements OnInit, AfterViewInit {
+
+  loading:boolean = true;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any> =
     Object.create(null);
@@ -85,8 +89,7 @@ export class CuotasDia implements OnInit, AfterViewInit {
 
       this.cuotasService.findAllCuotasDia().subscribe((data:any) => {
 
-        console.log(data);
-
+        this.loading = false;
 
         this.cuotasDia = data.cuotas;
         this.totalCuotasDia = data.totalCuotasDelDia;
@@ -100,8 +103,6 @@ export class CuotasDia implements OnInit, AfterViewInit {
             data.cliente.nombres.toLowerCase().includes(texto)
           );
         };
-
-        // console.log(data);
 
       })
 

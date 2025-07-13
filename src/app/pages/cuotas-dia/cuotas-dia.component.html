@@ -43,6 +43,8 @@
 <mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <div class="table-responsive">
+
+      <app-loader [visible]="loading" mode="fullscreen" [size]="60" />
       <table mat-table [dataSource]="dataSource" class="w-100 custom-table">
         <ng-container matColumnDef="#">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">#</th>

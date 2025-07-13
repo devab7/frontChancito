@@ -31,6 +31,7 @@ import { RouterModule } from '@angular/router';
 import { CuotasService } from 'src/app/services/cuotas.service';
 import { Cuota } from 'src/app/interfaces/cuota.interface';
 import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
+import { LoaderComponent } from '../ui-components/loader/loader.component';
 
 @Component({
   selector: 'app-cuotas-mes',
@@ -42,12 +43,15 @@ import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-colo
     NgScrollbarModule,
     CommonModule,
     RouterModule,
-    TipoPagoColorDirective
+    TipoPagoColorDirective,
+    LoaderComponent
   ],
   templateUrl: './cuotas-mes.component.html',
   styles: ``
 })
 export class CuotasMesComponent implements OnInit {
+
+  loading:boolean = true;
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any> = Object.create(null);
   searchText: any;
@@ -69,7 +73,7 @@ export class CuotasMesComponent implements OnInit {
 
       this.cuotasService.findAllCuotasMensuales().subscribe((data:any) => {
 
-        console.log(data);
+        this.loading = false;
 
         this.totalAnual = data.totalAnual;
         this.totalPorTipoPago = data.totalPorTipoPago;
@@ -83,7 +87,6 @@ export class CuotasMesComponent implements OnInit {
         //   );
         // };
 
-        // console.log(data);
 
       })
 

@@ -36,6 +36,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { messages } from '../apps/chat/chat-data';
+import { LoaderComponent } from '../ui-components/loader/loader.component';
 
 export interface Employee {
   id: number;
@@ -58,12 +59,15 @@ export interface Employee {
     MatNativeDateModule,
     NgScrollbarModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatSnackBarModule,
+    LoaderComponent
   ],
   providers: [DatePipe],
 })
 export class Clientes implements AfterViewInit, OnInit {
 
+  loading = true;
   clientes: Cliente[] = [];
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any> =
@@ -82,7 +86,7 @@ export class Clientes implements AfterViewInit, OnInit {
     Object.create(null);
 
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, private clientesService: ClientesService, private authService: AuthService) {}
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, private clientesService: ClientesService, private authService: AuthService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.obtenerClientes();
@@ -94,33 +98,10 @@ export class Clientes implements AfterViewInit, OnInit {
   }
 
 
-// obtenerClientes(): void {
-//   this.clientesService.findAll().subscribe((data) => {
-
-//     console.log(data);
-
-//     this.clientes = data;
-//     this.dataSource = new MatTableDataSource(data);
-
-//     setTimeout(() => {
-//       this.dataSource.paginator = this.paginator;
-//       this.table.renderRows(); // ⬅️ fuerza el render
-//     });
-
-//     this.dataSource.filterPredicate = (cliente, filtro) => {
-//       const texto = filtro.trim().toLowerCase();
-//       return (
-//         cliente.nombres.toLowerCase().includes(texto) ||
-//         cliente.dni.toLowerCase().includes(texto)
-//       );
-//     };
-//   });
-// }
-
 obtenerClientes(): void {
   this.clientesService.findAll().subscribe((data) => {
 
-    console.log(data);
+    this.loading = false; // desactivación visual controlada
 
     // 🧠 Aseguramos orden en el frontend por si el backend falla en precisión
     const ordenados = data.sort((a, b) => {
@@ -167,6 +148,8 @@ obtenerClientes(): void {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+
+      if (!result) return; // evita el error si se cerró sin acción
       if (result.event === 'Add') {
         // this.addRowData(result.data);
         this.obtenerClientes(); // ⬅️ actualiza desde el backend
@@ -206,8 +189,17 @@ obtenerClientes(): void {
     this.clientesService.delete(cliente.id).subscribe(() => {
       this.obtenerClientes(); // ⬅️ actualiza desde el backend
     });
-    console.log(cliente);
 
+    this.clientesService.delete(cliente.id).subscribe({
+      next: () => {
+
+        this.obtenerClientes(); // ✅ Si se elimina correctamente
+
+      },
+      error: (err) => {
+
+      }
+    });
 
   }
 }
@@ -216,17 +208,18 @@ obtenerClientes(): void {
   // tslint:disable-next-line: component-selector
   selector: 'app-dialog-content',
   standalone: true,
-  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule, MatSnackBarModule],
+  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule, MatSnackBarModule, LoaderComponent  ],
   providers: [DatePipe],
   templateUrl: 'clientes-dialog-content.html',
 })
 // tslint:disable-next-line: component-class-suffix
 export class AppKichenSinkDialogContentComponent {
+
+  loading:boolean = false;
   action: string;
   // tslint:disable-next-line - Disables all
   local_data: any;
   selectedImage: any = '';
-
   clienteForm!: FormGroup;
 
 
@@ -272,6 +265,9 @@ doAction(): void {
   } else {
     if (this.clienteForm.invalid) return;
 
+
+      this.loading = true;
+
     // this.clientesService.create(this.clienteForm.value).subscribe(cliente => {
     //   this.dialogRef.close({ event: 'Add', data: cliente });
     // });
@@ -291,17 +287,27 @@ doAction(): void {
 
       this.clientesService.create(dto).subscribe({
         next: (cliente) => {
+
           this.dialogRef.close({ event: 'Add', data: cliente });
         },
         error: (err) => {
 
+          this.loading = false;
           this.snackBar.open(err.error.message, undefined, {
             duration: 3500,
             verticalPosition: 'top',
             horizontalPosition: 'center',
             panelClass: ['bg-error']
           });
+        },
+        complete: () => {
 
+          this.snackBar.open('Cliente agregado', undefined, {
+            duration: 3500,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['bg-success']
+          });
         }
       });
 

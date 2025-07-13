@@ -50,12 +50,14 @@
       </div>
     </div>
 
-    <button mat-flat-button color="primary" [disabled]="clienteForm.invalid" (click)="doAction()" class="rounded-0">
+    <button mat-flat-button color="warn" [disabled]="clienteForm.invalid" (click)="doAction()" class="rounded-0">
       {{ action }}
     </button>
     <button mat-stroked-button color="warn" class="m-l-8" (click)="closeDialog()" class="m-l-8 rounded-0">
       Cancel
     </button>
+    <app-loader [visible]="loading" mode="inline" [size]="20"/>
+
   </form>
 
 </mat-dialog-content>

@@ -38,6 +38,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
 
 import { DateTime } from 'luxon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoaderComponent } from '../ui-components/loader/loader.component';
 
 
 export interface Employee {
@@ -62,12 +64,15 @@ export interface Employee {
     NgScrollbarModule,
     CommonModule,
     RouterModule,
-    TipoPagoColorDirective
+    TipoPagoColorDirective,
+    LoaderComponent
+
   ],
   providers: [DatePipe],
 })
 export class Cuotas implements OnInit, AfterViewInit {
 
+  loading:boolean = true;
   cuotas: Cuota[] = [];
 
 
@@ -99,6 +104,8 @@ export class Cuotas implements OnInit, AfterViewInit {
 
     obtenerCuotas(): void {
       this.cuotasService.findAll().subscribe((data) => {
+
+        this.loading = false;
         this.cuotas = data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
@@ -110,8 +117,6 @@ export class Cuotas implements OnInit, AfterViewInit {
             data.cliente.nombres.toLowerCase().includes(texto)
           );
         };
-
-        console.log(this.cuotas);
 
       });
     }
@@ -136,6 +141,8 @@ export class Cuotas implements OnInit, AfterViewInit {
 
 
     dialogRef.afterClosed().subscribe((result) => {
+
+      if (!result) return; // evita el error si se cerró sin acción
       if (result.event === 'Add') {
 
         this.obtenerCuotas(); // ⬅️ actualiza desde el backend
@@ -192,12 +199,14 @@ export class Cuotas implements OnInit, AfterViewInit {
   // tslint:disable-next-line: component-selector
   selector: 'app-dialog-content',
   standalone: true,
-  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule, CommonModule],
+  imports: [MatDialogModule, FormsModule, MaterialModule, ReactiveFormsModule, CommonModule, MatSnackBarModule, LoaderComponent ],
   providers: [DatePipe],
   templateUrl: 'cuotas-dialog-content.html',
 })
 // tslint:disable-next-line: component-class-suffix
 export class AppKichenSinkDialogContentComponent implements OnInit {
+
+  loading:boolean = false;
   action: string;
   // tslint:disable-next-line - Disables all
   local_data: any;
@@ -217,7 +226,8 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Employee,
     private fb: FormBuilder,
     private clientesService: ClientesService,
-    private cuotasService: CuotasService
+    private cuotasService: CuotasService,
+    private snackBar: MatSnackBar
 
   ) {
 
@@ -272,7 +282,6 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
     this.clientesService.findAll().subscribe((clientes) => {
 
       this.clientes = clientes
-      // console.log(this.clientes);
 
     })
 
@@ -287,48 +296,13 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
   }
 
 
-  // este do action descomentar cuando el cliinte subas sus cuotas pasadas y eliminar la de abajo
-  // doAction(): void {
-  //   // this.dialogRef.close({ event: this.action, data: this.local_data });
-
-  //     if (this.action === 'Delete') {
-
-  //       this.dialogRef.close({ event: 'Delete', data: this.local_data });
-
-  //     } else {
-  //       if (this.cuotaForm.invalid) return;
-
-  //       console.log(this.cuotaForm.value);
-
-
-  //       this.cuotasService.create(this.cuotaForm.value).subscribe({
-  //         next: (cuota:Cuota) => {
-
-  //           console.log(cuota);
-  //           this.dialogRef.close({ event: 'Add', data: cuota });
-  //         },
-  //         error: (error) => {
-
-  //           this.cuotaExiste = error.error.message
-
-  //         }
-  //       });
-
-
-
-
-
-  //     }
-  // }
-
-
-
-
   doAction(): void {
     if (this.action === 'Delete') {
       this.dialogRef.close({ event: 'Delete', data: this.local_data });
     } else {
       if (this.cuotaForm.invalid) return;
+
+      this.loading = true;
 
       const fechaPicker = this.cuotaForm.get('creadoEn')?.value;
 
@@ -344,10 +318,21 @@ export class AppKichenSinkDialogContentComponent implements OnInit {
 
       this.cuotasService.create(payload).subscribe({
         next: (cuota: Cuota) => {
+          this.loading = false;
           this.dialogRef.close({ event: 'Add', data: cuota });
         },
         error: (error) => {
+          this.loading = false;
           this.cuotaExiste = error.error.message;
+        },
+        complete: () => {
+
+          this.snackBar.open('Cuota agregada', undefined, {
+            duration: 3500,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['bg-success']
+          });
         }
       });
     }

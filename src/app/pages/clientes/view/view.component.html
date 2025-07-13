@@ -108,7 +108,11 @@
           </div>
           <div class="row justify-content-end">
             <div class="col-sm-12">
-              <button mat-flat-button color="primary" class="btn-l rounded-0"  [disabled]="viewClienteForm.invalid">Actualizar</button>
+              <button mat-flat-button color="primary" class="btn-l rounded-0"  [disabled]="viewClienteForm.invalid">
+                Actualizar
+              </button>
+              <app-loader [visible]="loadingButton" mode="inline" [size]="20" />
+
             </div>
           </div>
         </form>
@@ -144,34 +148,18 @@
 
           <div class="col-lg-8 d-flex align-items-center justify-content-end">
             <form [formGroup]="filtroMesForm" class="w-100">
-              <!-- <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
-                <mat-select value="0" formControlName="mes" placeholder="CONSULTE UN MES">
-                  <mat-option [value]="'01'">Enero</mat-option>
-                  <mat-option [value]="'02'">Febrero</mat-option>
-                  <mat-option [value]="'03'">Marzo</mat-option>
-                  <mat-option [value]="'04'">Abril</mat-option>
-                  <mat-option [value]="'05'">Mayo</mat-option>
-                  <mat-option [value]="'06'">Junio</mat-option>
-                  <mat-option [value]="'07'">Julio</mat-option>
-                  <mat-option [value]="'08'">Agosto</mat-option>
-                  <mat-option [value]="'09'">Septiembre</mat-option>
-                  <mat-option [value]="'10'">Octubre</mat-option>
-                  <mat-option [value]="'11'">Noviembre</mat-option>
-                  <mat-option [value]="'12'">Diciembre</mat-option>
-                </mat-select>
-              </mat-form-field> -->
 
-
-              <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
+              <mat-form-field appearance="outline" class="w-100 custom-select select-view-cliente" style="margin-top: 16px;">
                 <mat-select formControlName="mes" placeholder="CONSULTE UN MES">
                   <mat-option *ngFor="let mes of mesesDisponibles" [value]="mes.numero.toString().padStart(2, '0')">
                     {{ mes.nombre | titlecase }}
                   </mat-option>
+
                 </mat-select>
               </mat-form-field>
 
-
             </form>
+            <app-loader [visible]="loadingConsulte" mode="inline" [size]="20" />
           </div>
 
 
@@ -180,6 +168,8 @@
         </div>
 
         <div class="table-responsive">
+
+          <app-loader [visible]="loadingTables" mode="overlay" [size]="60" />
           <table mat-table [dataSource]="dataSource1" class="w-100 custom-table">
 
             <!-- Columna Día -->
@@ -238,7 +228,7 @@
           </div> -->
 
           <div class="col-lg-12 d-flex align-items-center justify-content-end">
-            <mat-form-field appearance="outline" class="w-100 custom-select" style="margin-top: 16px;">
+            <mat-form-field appearance="outline" class="w-100 custom-select select-view-cliente" style="margin-top: 16px;">
               <mat-select [(value)]="selectedMes" placeholder="ELIJA UN MES PARA RETIRAR"
                           (selectionChange)="realizarRetiro()">
                 <mat-option *ngFor="let mes of mesesDisponibles" [value]="mes.numero">
@@ -246,6 +236,8 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-loader [visible]="loadingRetire" mode="inline" [size]="20" />
+
           </div>
 
 
@@ -253,6 +245,7 @@
         </div>
 
         <div class="table-responsive">
+          <app-loader [visible]="loadingTables" mode="overlay" [size]="60" />
           <table mat-table [dataSource]="dataSourceRetiro" class="w-100 custom-table">
 
             <!-- Columna Día -->

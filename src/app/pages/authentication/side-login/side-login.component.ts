@@ -12,6 +12,7 @@ import { MaterialModule } from '../../../material.module';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from 'src/app/services/auth.service'; // agregado
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoaderComponent } from '../../ui-components/loader/loader.component';
 
 @Component({
   selector: 'app-side-login',
@@ -22,7 +23,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    LoaderComponent
   ],
   templateUrl: './side-login.component.html',
 })
@@ -32,6 +34,7 @@ export class AppSideLoginComponent {
   error = '';
   loading = false;
 
+
   constructor(
     private settings: CoreService,
     private router: Router,
@@ -40,8 +43,8 @@ export class AppSideLoginComponent {
   ) {}
 
   loginForm = new FormGroup({
-    username: new FormControl('admin', [Validators.required, Validators.minLength(3)]), // renombrado
-    password: new FormControl('123', [Validators.required]),
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
   });
 
   get f() {
@@ -49,7 +52,13 @@ export class AppSideLoginComponent {
   }
 
   login() {
-    if (this.loginForm.invalid) return;
+
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
 
     const { username, password } = this.loginForm.value;
     this.loading = true;
@@ -62,19 +71,20 @@ export class AppSideLoginComponent {
       },
       error: (err) => {
 
-        console.log('Error de autenticación:', err.error.message || 'Credenciales inválidas');
-
+        this.loading = false;
         this.snackBar.open(err.error.message, undefined, {
-          duration: 3500,
+          duration: 2500,
           verticalPosition: 'top',
           horizontalPosition: 'center',
           panelClass: ['bg-error']
         });
 
+
       },
       complete: () => {
+        this.loading = false;
         this.snackBar.open('Bienvenido a CHANCHITO', undefined, {
-          duration: 2500,
+          duration: 1500,
           verticalPosition: 'top',
           horizontalPosition: 'center',
           panelClass: ['bg-success']

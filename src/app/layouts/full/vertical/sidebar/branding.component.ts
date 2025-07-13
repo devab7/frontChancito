@@ -8,7 +8,7 @@ import { CoreService } from 'src/app/services/core.service';
   imports: [RouterModule],
   template: `
     <div class="branding m-b-20">
-      <a [routerLink]="['/']" style="display: flex; align-items:center; text-decoration:none">
+      <a [routerLink]="['/pages/clientes']" style="display: flex; align-items:center; text-decoration:none">
         <img
           src="./assets/images/logos/logo-chanchito.png"
           class="align-middle m-2 logo"
