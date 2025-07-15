@@ -78,9 +78,38 @@ export class Clientes implements AfterViewInit, OnInit {
     'dni',
     'nombres',
     'telefono',
-    'lugarNacimiento',
+    // 'lugarNacimiento',
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
     'action',
   ];
+
+  mesesDelAnio = [
+    { mes: 1, key: 'enero' },
+    { mes: 2, key: 'febrero' },
+    { mes: 3, key: 'marzo' },
+    { mes: 4, key: 'abril' },
+    { mes: 5, key: 'mayo' },
+    { mes: 6, key: 'junio' },
+    { mes: 7, key: 'julio' },
+    { mes: 8, key: 'agosto' },
+    { mes: 9, key: 'septiembre' },
+    { mes: 10, key: 'octubre' },
+    { mes: 11, key: 'noviembre' },
+    { mes: 12, key: 'diciembre' }
+  ];
+
+
   dataSource = new MatTableDataSource<Cliente>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator =
     Object.create(null);
@@ -93,6 +122,12 @@ export class Clientes implements AfterViewInit, OnInit {
 
   }
 
+  // Para los mese activos que viene en la respuesta
+  tieneCuota(cliente: Cliente, nombreMes: string): boolean {
+    return cliente.mesesActivos?.some(m => m.nombre === nombreMes && m.tieneCuota);
+  }
+
+
   get rolUsuario(): string | null {
     return this.authService.getUserRol();
   }
@@ -100,6 +135,9 @@ export class Clientes implements AfterViewInit, OnInit {
 
 obtenerClientes(): void {
   this.clientesService.findAll().subscribe((data) => {
+
+    console.log(data);
+
 
     this.loading = false; // desactivación visual controlada
 

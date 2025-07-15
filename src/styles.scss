@@ -54,6 +54,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding-top: 13px !important;
 }
 
+.indicador-mes {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 auto;
+}
+
+.mes-activo {
+  border-radius: 50%;
+  background-color: #36c76c;
+}
+
+.mes-inactivo {
+  border-radius: 50%;
+  background-color: #ff6692;
+}
+
+
 /* DETALLE CLIENTE */
 .header-table-cliente {
   font-size: 16px !important;
@@ -236,3 +254,6 @@ input.input-login {
     margin-top: 15px !important; // o lo que necesites
   }
 }
+
+
+

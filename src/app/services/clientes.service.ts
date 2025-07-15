@@ -27,25 +27,14 @@ export class ClientesService {
   }
 
   // Obtener un cliente por ID
-  // findOne(id: number): Observable<Cliente> {
-  //   return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
-  // }
-
   findOne(id: number, options: any = {}): Observable<any> {
     return this.http.get<Cliente>(`${this.apiUrl}/${id}`, options);
   }
-
-
-  // Actualizar un cliente
-  // update(id: number, cliente: UpdateClienteDto): Observable<Cliente> {
-  //   return this.http.patch<Cliente>(`${this.apiUrl}/${id}`, cliente);
-  // }
 
   // Actualizar cliente
   update(id: number, cliente: UpdateClienteDto): Observable<Cliente> {
     return this.http.patch<Cliente>(`${this.apiUrl}/${id}`, cliente);
   }
-
 
   // Eliminar un cliente
   delete(id: number): Observable<Cliente> {

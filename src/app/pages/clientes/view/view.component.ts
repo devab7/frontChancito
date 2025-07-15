@@ -79,8 +79,6 @@ export class ViewComponent implements OnInit {
 
   retiroMesForm: FormGroup;
 
-
-
   constructor( private snackBar: MatSnackBar ) { }
 
 
@@ -158,7 +156,15 @@ export class ViewComponent implements OnInit {
     this.retiroService.retirarMes(dto).subscribe({
       next: (data) => {
 
+
+        console.log('🧮 totalSistemaActualizado recibido del backend:', data.totalSistemaActualizado);
+
+
+
         this.resultadoRetiro = data;
+        this.retiroService.actualizarTotalDesdeRetiro(data.totalSistemaActualizado);
+
+
         this.loadingRetire = false;
         // this.cargarClienteConMes();
 

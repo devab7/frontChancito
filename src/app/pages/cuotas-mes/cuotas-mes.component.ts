@@ -32,6 +32,7 @@ import { CuotasService } from 'src/app/services/cuotas.service';
 import { Cuota } from 'src/app/interfaces/cuota.interface';
 import { TipoPagoColorDirective } from 'src/app/shared/directives/tipo-pago-color.directive';
 import { LoaderComponent } from '../ui-components/loader/loader.component';
+import { RetirosService } from 'src/app/services/retiros.service';
 
 @Component({
   selector: 'app-cuotas-mes',
@@ -66,10 +67,22 @@ export class CuotasMesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator = Object.create(null);
   totalPorTipoPago: { nombre: string; monto: number }[] = []; // 🔧 AGREGADO: inicialización segura
   totalAnual: number = 0;
+  totalSistemaVivo  = 0;
 
-  constructor( private cuotasService: CuotasService) {}
+
+  constructor( private cuotasService: CuotasService, private retiroService:RetirosService ) {}
 
   ngOnInit(): void {
+
+
+
+
+
+      this.cuotasService.obtenerTotalCuotasVivas().subscribe(total => {
+        this.totalSistemaVivo  = total;
+      });
+
+
 
       this.cuotasService.findAllCuotasMensuales().subscribe((data:any) => {
 
@@ -78,6 +91,20 @@ export class CuotasMesComponent implements OnInit {
         this.totalAnual = data.totalAnual;
         this.totalPorTipoPago = data.totalPorTipoPago;
         this.dataSource = new MatTableDataSource(data.resumenMensual);
+
+
+        // Ordenar porTipoPago visualmente:
+        const ordenPreferido = ['efectivo', 'interbank', 'bcp'];
+
+        data.resumenMensual.forEach((resumen: any) => {
+          resumen.porTipoPago.sort((a: any, b: any) =>
+            ordenPreferido.indexOf(a.nombre.toLowerCase()) - ordenPreferido.indexOf(b.nombre.toLowerCase())
+          );
+        });
+
+
+
+
         // this.dataSource.paginator = this.paginator;
 
         // this.dataSource.filterPredicate = (data: any, filter: string) => {

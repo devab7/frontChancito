@@ -72,14 +72,14 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="lugarNacimiento">
+        <!-- <ng-container matColumnDef="lugarNacimiento">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
             Lugar de nacimiento
           </th>
           <td mat-cell *matCellDef="let element" class="f-s-14">
             {{ element.lugarNacimiento }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
@@ -93,15 +93,28 @@
               > VER
             <!-- <i-tabler name="eye" class="icon-18"></i-tabler> -->
             </a>
-            <a
+            <!-- <a
               *ngIf="rolUsuario !== 'TRABAJADOR'"
               (click)="openDialog('Delete', element)"
               class="m-r-10 cursor-pointer mdc-button mdc-button--unelevated mat-mdc-unelevated-button mat-warn mat-mdc-button-base btn-action btn-eliminar-cliente"
             >
               <i-tabler name="trash" class="icon-18"></i-tabler>
-            </a>
+            </a> -->
           </td>
         </ng-container>
+
+        <ng-container *ngFor="let mes of mesesDelAnio" [matColumnDef]="mes.key">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            {{ mes.key | slice:0:3 | titlecase }}
+          </th>
+          <td mat-cell *matCellDef="let element" class="text-left" style="padding-left:24px">
+            <span
+              [ngClass]="tieneCuota(element, mes.key) ? 'mes-activo' : 'mes-inactivo'"
+              class="indicador-mes"
+            ></span>
+          </td>
+        </ng-container>
+
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns" class="custom-tr"></tr>

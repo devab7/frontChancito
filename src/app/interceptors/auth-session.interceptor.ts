@@ -41,7 +41,8 @@ export class AuthSessionInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         // 🔍 4. Detectar error típico de sesión expirada
-        if (error.status === 401 && !alreadyRetried) {
+
+       if ((error.status === 401 || error.status === 403) && !alreadyRetried) {
           alreadyRetried = true;
 
           // 🔄 5. Intentar renovar el token accediendo a /auth/refresh

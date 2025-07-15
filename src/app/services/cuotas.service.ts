@@ -63,6 +63,9 @@ export class CuotasService {
   }
 
 
-
+  // Total cuotas vivas. es decir con estado retirada:false
+  obtenerTotalCuotasVivas(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/totales-cuotas-vivas`);
+  }
 
 }

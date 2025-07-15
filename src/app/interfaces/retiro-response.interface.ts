@@ -10,5 +10,6 @@ export interface RetiroResponse {
   cliente: Cliente;
   mesActual: number;
   nombreMesActual: string;
+  totalSistemaActualizado: number
 
 }

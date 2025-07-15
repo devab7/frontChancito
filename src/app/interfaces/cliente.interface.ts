@@ -9,6 +9,7 @@ export interface Cliente {
   cumple?: string | null;
   creadoEn: string;
   actualizadoEn: string;
+  mesesActivos: { mes: number; nombre: string;tieneCuota: boolean; }[]
   // totalCuotasMes: number;
 }
 
